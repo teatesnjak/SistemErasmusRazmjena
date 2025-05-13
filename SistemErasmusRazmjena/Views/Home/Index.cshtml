@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = ViewData["Title"] ?? "Default Title";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Erasmus Exchange System</h1>
+    <p>Learn more about Erasmus Programs and how to apply for them.</p>
+
+@if (User?.Identity?.IsAuthenticated == true)
+{
+        <div class="mt-4">
+            <a asp-controller="Prijava" asp-action="Index" class="btn btn-primary">My Applications</a>
+            @if (User.IsInRole("Student"))
+            {
+                <a asp-controller="Prijava" asp-action="Create" class="btn btn-success ml-2">New Application</a>
+            }
+        </div>
+}
+    }

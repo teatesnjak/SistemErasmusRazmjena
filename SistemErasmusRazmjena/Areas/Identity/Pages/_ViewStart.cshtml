@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - Sistem Erasmus</title>
+    <partial name="~/Pages/Shared/_ValidationScriptsPartial.cshtml" />
+</head>
+<body>
+    <header>
+        <partial name="~/Pages/Shared/_LoginPartial.cshtml" />
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <partial name="~/Pages/Shared/_ValidationScriptsPartial.cshtml" />
+</body>
+</html>
