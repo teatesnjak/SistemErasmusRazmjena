@@ -1,19 +1,75 @@
 ﻿@{
-    ViewData["Title"] = ViewData["Title"] ?? "Default Title";
+    ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Erasmus Exchange System</h1>
-    <p>Learn more about Erasmus Programs and how to apply for them.</p>
+<div class="py-5 bg-light rounded-3 mb-4">
+    <div class="container-fluid">
+        <h1 class="display-4">Welcome to Erasmus Exchange System</h1>
+        <p class="lead">This system helps students apply for Erasmus exchange programs and manage their applications.</p>
+        <hr class="my-4">
+        
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            <div class="alert alert-success">
+                <h4>Welcome back, @User.Identity.Name!</h4>
+                <p>You are signed in and ready to use the system.</p>
+            </div>
+            
+            <div class="mt-4">
+                <a asp-controller="Prijava" asp-action="Index" class="btn btn-primary">My Applications</a>
+                
+                @if (User.IsInRole("Student"))
+                {
+                    <a asp-controller="Prijava" asp-action="Create" class="btn btn-success">New Application</a>
+                }
+                
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Account" asp-action="RegisterKoordinator" class="btn btn-info">Register ECTS Coordinator</a>
+                }
+            </div>
+        }
+        else
+        {
+            <p>Please sign in to access the system features or register if you don't have an account.</p>
+            <div>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-success">Register</a>
+            </div>
+        }
+    </div>
+</div>
 
-@if (User?.Identity?.IsAuthenticated == true)
-{
-        <div class="mt-4">
-            <a asp-controller="Prijava" asp-action="Index" class="btn btn-primary">My Applications</a>
-            @if (User.IsInRole("Student"))
-            {
-                <a asp-controller="Prijava" asp-action="Create" class="btn btn-success ml-2">New Application</a>
-            }
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">For Students</h5>
+            </div>
+            <div class="card-body">
+                <p>Learn about available exchange programs and apply for Erasmus opportunities abroad.</p>
+            </div>
         </div>
-}
-    }
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">For ECTS Coordinators</h5>
+            </div>
+            <div class="card-body">
+                <p>Review and manage student applications from your faculty.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">For Administrators</h5>
+            </div>
+            <div class="card-body">
+                <p>Manage users, programs, and system settings.</p>
+            </div>
+        </div>
+    </div>
+</div>
+

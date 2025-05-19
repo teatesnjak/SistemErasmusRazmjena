@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8AERPoGOhik=",
+  "dgSpecHash": "Mq2z1qPvgnQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\teate\\source\\repos\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj",
+  "projectFilePath": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\teate\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\teate\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

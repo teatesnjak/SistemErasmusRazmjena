@@ -1,0 +1,45 @@
+﻿@model SistemErasmusRazmjena.Models.ViewModels.RegisterKoordinatorViewModel
+
+@{
+    ViewData["Title"] = "Register ECTS Coordinator";
+}
+
+<h2>Register ECTS Coordinator</h2>
+
+<form asp-controller="Account" asp-action="RegisterKoordinator" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-group mb-3">
+        <label for="Email">Email</label>
+        <input type="email" id="Email" name="Email" class="form-control" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="Password">Password</label>
+        <input type="password" id="Password" name="Password" class="form-control" required />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="FakultetID">Fakultet</label>
+        <select id="FakultetID" name="FakultetID" class="form-control" required>
+            <option value="">-- Select Fakultet --</option>
+            @foreach (var fakultet in Model.Fakulteti)
+            {
+                <option value="@fakultet.Id">@fakultet.Naziv</option>
+            }
+        </select>
+        <span asp-validation-for="FakultetID" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

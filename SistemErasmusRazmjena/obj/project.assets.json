@@ -8462,11 +8462,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\teate\\source\\repos\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj",
+      "projectUniqueName": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj",
       "projectName": "SistemErasmusRazmjena",
-      "projectPath": "C:\\Users\\teate\\source\\repos\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj",
+      "projectPath": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj",
       "packagesPath": "C:\\Users\\teate\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\teate\\source\\repos\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\obj\\",
+      "outputPath": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -14,6 +14,7 @@ namespace SistemErasmusRazmjena.Data
         public DbSet<PrijedlogPredmeta> PrijedloziPredmeta { get; set; }
         public DbSet<Predmet> Predmeti { get; set; }
         public DbSet<Notifikacija> Notifikacije { get; set; }
+        public DbSet<Fakultet> Fakulteti { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +61,7 @@ namespace SistemErasmusRazmjena.Data
                 .WithMany()
                 .HasForeignKey(n => n.KorisnikID)
                 .OnDelete(DeleteBehavior.Cascade);
+
         }
 
     }
