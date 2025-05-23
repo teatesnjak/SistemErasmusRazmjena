@@ -1,0 +1,20 @@
+@model SistemErasmusRazmjena.Models.ViewModels.AddCoordinatorViewModel
+
+@{
+    ViewData["Title"] = "Add Coordinator";
+}
+
+<div class="container">
+    <h1 class="mb-4">Add Coordinator</h1>
+
+    <form asp-action="AddCoordinator" method="post">
+        <div class="mb-3">
+            <label for="userId" class="form-label">Select User</label>
+            <select asp-for="UserId" class="form-select" asp-items="Model.Users">
+                <option value="">-- Select a User --</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add as Coordinator</button>
+    </form>
+</div>

@@ -22,6 +22,12 @@ namespace SistemErasmusRazmjena.Data
                 }
             }
 
+            // Ensure ECTSKoordinator role exists
+            if (!await roleManager.RoleExistsAsync("ECTSKoordinator"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("ECTSKoordinator"));
+            }
+
             // ==================== ADMIN ====================
             var adminEmail = "admin@erasmus.ba";
             var adminPassword = "Admin123!";

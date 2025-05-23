@@ -177,6 +177,14 @@ namespace SistemErasmusRazmjena.Data.Migrations
                     b.Property<int?>("FakultetID")
                         .HasColumnType("int");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -299,11 +307,14 @@ namespace SistemErasmusRazmjena.Data.Migrations
 
             modelBuilder.Entity("SistemErasmusRazmjena.Models.Notifikacija", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("KorisnikID")
                         .IsRequired()
@@ -319,7 +330,7 @@ namespace SistemErasmusRazmjena.Data.Migrations
                     b.Property<DateTime>("Vrijeme")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("KorisnikID");
 

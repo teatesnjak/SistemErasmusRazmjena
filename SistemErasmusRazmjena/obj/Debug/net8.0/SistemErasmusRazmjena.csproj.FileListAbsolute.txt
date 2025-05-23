@@ -534,10 +534,10 @@ C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\SistemEr.1F1570BC.Up2Date
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\SistemErasmusRazmjena.dll
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\refint\SistemErasmusRazmjena.dll
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\SistemErasmusRazmjena.pdb
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\SistemErasmusRazmjena.genruntimeconfig.cache
 C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\ref\SistemErasmusRazmjena.dll
+C:\Users\teate\Desktop\SistemErasmusRazmjena\SistemErasmusRazmjena\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

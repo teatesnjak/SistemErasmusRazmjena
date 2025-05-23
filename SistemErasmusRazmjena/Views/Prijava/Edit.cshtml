@@ -1,54 +1,46 @@
 ﻿@model SistemErasmusRazmjena.Models.Prijava
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Application";
 }
 
-<h1>Edit</h1>
+<h1>Edit Application</h1>
 
-<h4>Prijava</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <label asp-for="StudentID" class="control-label"></label>
-                <select asp-for="StudentID" class="form-control" asp-items="ViewBag.StudentID"></select>
-                <span asp-validation-for="StudentID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ErasmusProgramID" class="control-label"></label>
-                <select asp-for="ErasmusProgramID" class="form-control" asp-items="ViewBag.ErasmusProgramID"></select>
-                <span asp-validation-for="ErasmusProgramID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DokumentacijaID" class="control-label"></label>
-                <select asp-for="DokumentacijaID" class="form-control" asp-items="ViewBag.DokumentacijaID"></select>
-                <span asp-validation-for="DokumentacijaID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PrijedlogPredmetaID" class="control-label"></label>
-                <select asp-for="PrijedlogPredmetaID" class="form-control" asp-items="ViewBag.PrijedlogPredmetaID"></select>
-                <span asp-validation-for="PrijedlogPredmetaID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Resubmit" method="post">
+    <input type="hidden" name="id" value="@Model.ID" />
+
+    <h4>Update Documentation</h4>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="CV" name="CV" @(Model.Dokumentacija.CV ? "checked" : "") />
+        <label class="form-check-label" for="CV">CV Provided</label>
     </div>
-</div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="MotivacionoPismo" name="MotivacionoPismo" @(Model.Dokumentacija.MotivacionoPismo ? "checked" : "") />
+        <label class="form-check-label" for="MotivacionoPismo">Motivation Letter Provided</label>
+    </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <h4>Update Subjects</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Home Subject</th>
+                <th>Accepting Subject</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.PrijedlogPredmeta.Rows.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input type="text" name="updatedSubjects[@i].PredmetHome" value="@Model.PrijedlogPredmeta.Rows[i].PredmetHome" class="form-control" />
+                    </td>
+                    <td>
+                        <input type="text" name="updatedSubjects[@i].PredmetAccepting" value="@Model.PrijedlogPredmeta.Rows[i].PredmetAccepting" class="form-control" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <button type="submit" class="btn btn-success">Resubmit Application</button>
+</form>

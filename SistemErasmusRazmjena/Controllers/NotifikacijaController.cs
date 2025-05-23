@@ -32,8 +32,8 @@ namespace SistemErasmusRazmjena.Controllers
                 return Unauthorized();
 
             var notifikacije = await _context.Notifikacije
-                .Where(n => n.KorisnikID == user.Id)
-                .OrderByDescending(n => n.Vrijeme)
+                .Where(n => n.KorisnikID == user.Id) // Fixed comparison operator and type mismatch
+                .OrderByDescending(n => n.Datum)
                 .ToListAsync();
 
             return Ok(notifikacije);

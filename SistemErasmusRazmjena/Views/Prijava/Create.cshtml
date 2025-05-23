@@ -1,49 +1,196 @@
-﻿@model SistemErasmusRazmjena.Models.Prijava
+﻿@model SistemErasmusRazmjena.Models.ViewModels.PrijavaCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Apply for Erasmus Program";
 }
 
-<h1>Create</h1>
+<div class="container">
+    <h1 class="mb-4">Apply for Erasmus Program</h1>
 
-<h4>Prijava</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="StudentID" class="control-label"></label>
-                <select asp-for="StudentID" class ="form-control" asp-items="ViewBag.StudentID"></select>
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">@Model.ProgramName</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <p><strong>Academic Year:</strong> @Model.AkademskaGodina</p>
+                <p><strong>Semester:</strong> @Model.Semestar</p>
             </div>
-            <div class="form-group">
-                <label asp-for="ErasmusProgramID" class="control-label"></label>
-                <select asp-for="ErasmusProgramID" class ="form-control" asp-items="ViewBag.ErasmusProgramID"></select>
+        </div>
+    </div>
+
+    @if (Model.AlreadyApplied)
+    {
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-circle me-2"></i>
+            You have already applied to this Erasmus program.
+        </div>
+        <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle me-1"></i> Povratak na sve dostupne Erasmus programe
+        </a>
+    }
+    else
+    {
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="ErasmusProgramID" />
+            <input type="hidden" asp-for="ProgramName" />
+            <input type="hidden" asp-for="AkademskaGodina" />
+            <input type="hidden" asp-for="Semestar" />
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Required Documentation</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">Please check the documents you have prepared and are ready to submit:</p>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" asp-for="CV" id="cv">
+                        <label class="form-check-label" for="cv">
+                            CV/Resume
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" asp-for="MotivacionoPismo" id="motivationLetter">
+                        <label class="form-check-label" for="motivationLetter">
+                            Motivation Letter
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" asp-for="UgovorOUcenju" id="learningAgreement">
+                        <label class="form-check-label" for="learningAgreement">
+                            Learning Agreement
+                        </label>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Note: You will need to upload these documents after submitting this application.
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="DokumentacijaID" class="control-label"></label>
-                <select asp-for="DokumentacijaID" class ="form-control" asp-items="ViewBag.DokumentacijaID"></select>
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Proposed Subjects</h5>
+                    <button type="button" class="btn btn-sm btn-primary" id="addSubject">
+                        <i class="bi bi-plus-circle me-1"></i> Add Subject
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="subjectsContainer">
+                        <!-- Subjects will be added here dynamically -->
+                    </div>
+
+                    <template id="subjectTemplate">
+                        <div class="subject-row border rounded p-3 mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6>Subject #<span class="subject-number"></span></h6>
+                                <button type="button" class="btn btn-sm btn-danger remove-subject">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Subject at Home University</label>
+                                        <input type="text" class="form-control" name="Predmeti[0].PredmetHome" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Subject at Accepting University</label>
+                                        <input type="text" class="form-control" name="Predmeti[0].PredmetAccepting" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="PrijedlogPredmetaID" class="control-label"></label>
-                <select asp-for="PrijedlogPredmetaID" class ="form-control" asp-items="ViewBag.PrijedlogPredmetaID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
+                <a asp-controller="ErasmusProgram" asp-action="Details" asp-route-id="@Model.ErasmusProgramID" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check2-circle me-1"></i> Submit Application
+                </button>
             </div>
         </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    }
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addSubjectBtn = document.getElementById('addSubject');
+            const subjectsContainer = document.getElementById('subjectsContainer');
+            const subjectTemplate = document.getElementById('subjectTemplate');
+
+            let subjectCount = 0;
+
+            // Add Subject button handler
+            addSubjectBtn.addEventListener('click', function () {
+                addNewSubject();
+            });
+
+            function addNewSubject() {
+                const newSubject = document.importNode(subjectTemplate.content, true);
+
+                // Update subject number and index
+                newSubject.querySelector('.subject-number').textContent = subjectCount + 1;
+
+                // Update input names with the correct index
+                newSubject.querySelectorAll('input').forEach(input => {
+                    input.name = input.name.replace('[0]', `[${subjectCount}]`);
+                });
+
+                // Add remove button handler
+                newSubject.querySelector('.remove-subject').addEventListener('click', function () {
+                    this.closest('.subject-row').remove();
+                    updateSubjectNumbers();
+                });
+
+                subjectsContainer.appendChild(newSubject);
+                subjectCount++;
+
+                // If it's the first subject, don't allow removal
+                if (subjectCount === 1) {
+                    document.querySelector('.remove-subject').style.display = 'none';
+                }
+            }
+
+            function updateSubjectNumbers() {
+                const subjects = subjectsContainer.querySelectorAll('.subject-row');
+                subjects.forEach((subject, index) => {
+                    subject.querySelector('.subject-number').textContent = index + 1;
+
+                    // Update input names with correct indices
+                    subject.querySelectorAll('input').forEach(input => {
+                        const nameParts = input.name.split('[');
+                        const nameBase = nameParts[0];
+                        const nameSuffix = nameParts[1].split(']')[1] || '';
+                        input.name = `${nameBase}[${index}]${nameSuffix}`;
+                    });
+
+                    // If only one subject remains, hide its remove button
+                    if (subjects.length === 1) {
+                        subjects[0].querySelector('.remove-subject').style.display = 'none';
+                    } else {
+                        subject.querySelector('.remove-subject').style.display = 'block';
+                    }
+                });
+
+                subjectCount = subjects.length;
+            }
+
+            // Add at least one subject row on page load
+            if (subjectCount === 0) {
+                addNewSubject();
+            }
+        });
+    </script>
 }

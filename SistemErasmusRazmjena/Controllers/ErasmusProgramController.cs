@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using SistemErasmusRazmjena.Data;
 using SistemErasmusRazmjena.Models;
+using System.Threading.Tasks;
 
 namespace SistemErasmusRazmjena.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ErasmusProgramController : ControllerBase
+    // Ensure no changes are made to the base class or interfaces during runtime
+    public class ErasmusProgramController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -17,8 +17,144 @@ namespace SistemErasmusRazmjena.Controllers
             _context = context;
         }
 
-        // GET: api/ErasmusProgram
-        [HttpGet]
+        // GET: ErasmusProgram
+        public async Task<IActionResult> Index()
+        {
+            var list = await _context.ErasmusProgrami.ToListAsync();
+            return View(list);
+        }
+
+        // GET: ErasmusProgram/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var program = await _context.ErasmusProgrami
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (program == null)
+            {
+                return NotFound();
+            }
+
+            return View(program);
+        }
+
+        // GET: ErasmusProgram/Create
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: ErasmusProgram/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("Semestar,AkademskaGodina,Univerzitet,Opis")] ErasmusProgram model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        // GET: ErasmusProgram/Edit/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var program = await _context.ErasmusProgrami.FindAsync(id);
+            if (program == null)
+            {
+                return NotFound();
+            }
+            return View(program);
+        }
+
+        // POST: ErasmusProgram/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Semestar,AkademskaGodina,Univerzitet,Opis")] ErasmusProgram model)
+        {
+            if (id != model.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(model);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.ErasmusProgrami.Any(e => e.ID == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        // GET: ErasmusProgram/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var program = await _context.ErasmusProgrami
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (program == null)
+            {
+                return NotFound();
+            }
+
+            return View(program);
+        }
+
+        // POST: ErasmusProgram/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var program = await _context.ErasmusProgrami.FindAsync(id);
+            if (program == null)
+            {
+                return NotFound();
+            }
+
+            _context.ErasmusProgrami.Remove(program);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // API Methods - If you still want them, add them with explicit routes
+        [HttpGet("api/erasmusprogram")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
@@ -26,8 +162,7 @@ namespace SistemErasmusRazmjena.Controllers
             return Ok(list);
         }
 
-        // GET: api/ErasmusProgram/5
-        [HttpGet("{id}")]
+        [HttpGet("api/erasmusprogram/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
@@ -36,60 +171,6 @@ namespace SistemErasmusRazmjena.Controllers
                 return NotFound();
 
             return Ok(program);
-        }
-
-        // POST: api/ErasmusProgram
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([FromBody] ErasmusProgram model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            _context.ErasmusProgrami.Add(model);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = model.ID }, model);
-        }
-
-        // PUT: api/ErasmusProgram/5
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int id, [FromBody] ErasmusProgram model)
-        {
-            if (id != model.ID)
-                return BadRequest("ID mismatch");
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            _context.Entry(model).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.ErasmusProgrami.Any(e => e.ID == id))
-                    return NotFound();
-                throw;
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/ErasmusProgram/5
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var program = await _context.ErasmusProgrami.FindAsync(id);
-            if (program == null)
-                return NotFound();
-
-            _context.ErasmusProgrami.Remove(program);
-            await _context.SaveChangesAsync();
-            return NoContent();
         }
     }
 }

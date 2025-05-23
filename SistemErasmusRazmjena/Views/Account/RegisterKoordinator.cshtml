@@ -12,6 +12,16 @@
     @Html.AntiForgeryToken()
 
     <div class="form-group mb-3">
+        <label for="FirstName">First Name</label>
+        <input type="text" id="FirstName" name="FirstName" class="form-control" required />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+
+    <div class="form-group mb-3">
+        <label for="LastName">Last Name</label>
+        <input type="text" id="LastName" name="LastName" class="form-control" required />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+
+    <div class="form-group mb-3">
         <label for="Email">Email</label>
         <input type="email" id="Email" name="Email" class="form-control" required />
         <span asp-validation-for="Email" class="text-danger"></span>
@@ -22,6 +32,12 @@
         <input type="password" id="Password" name="Password" class="form-control" required />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
+
+    <div class="form-group mb-3">
+       <label for="ConfirmPassword">Confirm Password</label>
+        <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" required />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
 
     <div class="form-group mb-3">
         <label for="FakultetID">Fakultet</label>

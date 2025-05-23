@@ -44,5 +44,14 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if the server has set the "AlreadyApplied" flag
+            var alreadyApplied = @((TempData["AlreadyApplied"] != null && (bool)TempData["AlreadyApplied"]).ToString().ToLower());
+            if (alreadyApplied) {
+                alert("You have already applied to this Erasmus program.");
+            }
+        });
+    </script>
 }
+

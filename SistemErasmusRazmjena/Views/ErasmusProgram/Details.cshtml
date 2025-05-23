@@ -1,42 +1,51 @@
 ﻿@model SistemErasmusRazmjena.Models.ErasmusProgram
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Program Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>ErasmusProgram</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Semestar)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Semestar)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AkademskaGodina)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AkademskaGodina)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Univerzitet)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Univerzitet)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Opis)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Opis)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="container erasmus-program-details">
+    <h1 class="mb-4">Program Details</h1>
+    
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">@Model.Univerzitet</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Semestar)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Semestar)</dd>
+                
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.AkademskaGodina)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.AkademskaGodina)</dd>
+                
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Univerzitet)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Univerzitet)</dd>
+                
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Opis)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Opis)</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <div class="action-links">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-outline-primary me-2">
+                        <i class="bi bi-pencil-square me-1"></i>Edit
+                    </a>
+                }
+                
+                @if (User.IsInRole("Student"))
+                {
+                    <a asp-controller="Prijava" asp-action="Create" asp-route-programId="@Model?.ID" class="btn btn-success me-2">
+                        <i class="bi bi-check-circle me-1"></i>Apply for Program
+                    </a>
+                }
+                
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
 </div>

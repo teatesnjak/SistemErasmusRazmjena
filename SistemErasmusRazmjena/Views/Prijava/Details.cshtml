@@ -1,48 +1,207 @@
 ﻿@model SistemErasmusRazmjena.Models.Prijava
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Application Details";
 }
 
-<h1>Details</h1>
+<div class="container">
+    <h1 class="mb-4">Application Details</h1>
 
-<div>
-    <h4>Prijava</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Student)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Student.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ErasmusProgram)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ErasmusProgram.ID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Dokumentacija)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Dokumentacija.ID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PrijedlogPredmeta)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PrijedlogPredmeta.ID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">@Model.ErasmusProgram.Univerzitet</h4>
+                    <div>
+                        @if (Model.Status == StatusPrijave.UTOKU)
+                        {
+                            <span class="badge bg-warning text-dark fs-6">In Progress</span>
+                        }
+                        else if (Model.Status == StatusPrijave.USPJESNA)
+                        {
+                            <span class="badge bg-success fs-6">Successful</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger fs-6">Unsuccessful</span>
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>Academic Year:</strong> @Model.ErasmusProgram.AkademskaGodina</p>
+                            <p><strong>Semester:</strong> @Model.ErasmusProgram.Semestar</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Student:</strong> @Model.Student.Email</p>
+                            <p><strong>Application ID:</strong> @Model.ID</p>
+                        </div>
+                    </div>
+
+                    <h5>Documentation Status</h5>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>CV/Resume</th>
+                                    <td>
+                                        @if (Model.Dokumentacija.CV)
+                                        {
+                                            <span class="text-success"><i class="bi bi-check-circle me-1"></i> Provided</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"><i class="bi bi-x-circle me-1"></i> Not Provided</span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Motivation Letter</th>
+                                    <td>
+                                        @if (Model.Dokumentacija.MotivacionoPismo)
+                                        {
+                                            <span class="text-success"><i class="bi bi-check-circle me-1"></i> Provided</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"><i class="bi bi-x-circle me-1"></i> Not Provided</span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Learning Agreement</th>
+                                    <td>
+                                        @if (Model.Dokumentacija.UgovorOUcenju)
+                                        {
+                                            <span class="text-success"><i class="bi bi-check-circle me-1"></i> Provided</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"><i class="bi bi-x-circle me-1"></i> Not Provided</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5>Proposed Subjects</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Subject at Home University</th>
+                                    <th>Subject at Accepting University</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.PrijedlogPredmeta.Rows != null && Model.PrijedlogPredmeta.Rows.Any())
+                                {
+                                    @for (var i = 0; i < Model.PrijedlogPredmeta.Rows.Count; i++)
+                                    {
+                                        var predmet = Model.PrijedlogPredmeta.Rows[i];
+                                        <tr>
+                                            <td>@(i+1)</td>
+                                            <td>@predmet.PredmetHome</td>
+                                            <td>@predmet.PredmetAccepting</td>
+                                            <td>
+                                                @if (predmet.Status == StatusPredmeta.NACEKANJU)
+                                                {
+                                                    <span class="badge bg-warning text-dark">Na cekanju</span>
+                                                }
+                                                else if (predmet.Status == StatusPredmeta.ODOBRENO)
+                                                {
+                                                    <span class="badge bg-success">Odobreno</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Odbijeno</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">No subjects provided</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (Model.Status == StatusPrijave.NEUSPJESNA && User.IsInRole("Student"))
+                    {
+                        <h5>Edit Your Application</h5>
+                        <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary">Edit Application</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar for actions and status -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    @if (User.IsInRole("Admin") || User.IsInRole("ECTSKoordinator"))
+                    {
+                        @if (Model.Status == StatusPrijave.UTOKU)
+                        {
+                            <form asp-action="UpdateStatus" method="post" class="mb-3">
+                                <input type="hidden" name="id" value="@Model.ID" />
+                                <input type="hidden" name="status" value="@StatusPrijave.USPJESNA" />
+                                <button type="submit" class="btn btn-success w-100 mb-2">
+                                    <i class="bi bi-check-circle me-1"></i> Approve Application
+                                </button>
+                            </form>
+
+                            <form asp-action="UpdateStatus" method="post">
+                                <input type="hidden" name="id" value="@Model.ID" />
+                                <input type="hidden" name="status" value="@StatusPrijave.NEUSPJESNA" />
+                                <button type="submit" class="btn btn-danger w-100">
+                                    <i class="bi bi-x-circle me-1"></i> Reject Application
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                This application has been processed and is no longer editable.
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Your application is being reviewed. Please check back later for updates.
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2 mt-3">
+                        @if (User.IsInRole("Student"))
+                        {
+                            <a asp-action="MyApplications" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i> Back to My Applications
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Applications
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

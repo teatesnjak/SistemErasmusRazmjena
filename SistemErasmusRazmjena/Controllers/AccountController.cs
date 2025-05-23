@@ -170,7 +170,9 @@ namespace SistemErasmusRazmjena.Controllers
                     UserName = model.Email,
                     Email = model.Email,
                     Uloga = "ECTSKoordinator",
-                    FakultetID = model.FakultetID
+                    FakultetID = model.FakultetID,
+                    FirstName = model.FirstName, // Added FirstName
+                    LastName = model.LastName    // Added LastName
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -190,6 +192,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             return View(model);
         }
+
 
         [HttpGet]
         [AllowAnonymous]

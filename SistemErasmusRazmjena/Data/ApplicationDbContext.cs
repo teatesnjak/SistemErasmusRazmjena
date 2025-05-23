@@ -15,6 +15,7 @@ namespace SistemErasmusRazmjena.Data
         public DbSet<Predmet> Predmeti { get; set; }
         public DbSet<Notifikacija> Notifikacije { get; set; }
         public DbSet<Fakultet> Fakulteti { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,8 +63,18 @@ namespace SistemErasmusRazmjena.Data
                 .HasForeignKey(n => n.KorisnikID)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Notifikacija>()
+                .HasOne(n => n.Korisnik)
+                .WithMany()
+                .HasForeignKey(n => n.KorisnikID)
+                .HasPrincipalKey(u => u.Id);
         }
 
     }
 
+    public class Faculty
+    {
+        public int Id { get; set; }
+        public string Naziv { get; set; }
+    }
 }

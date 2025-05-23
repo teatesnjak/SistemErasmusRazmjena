@@ -1,0 +1,57 @@
+@model SistemErasmusRazmjena.Models.PrijedlogPredmeta
+
+@{
+    ViewData["Title"] = "Manage Subjects";
+}
+
+<h1>Manage Subjects</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Subjects for Application</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Home Subject</th>
+                    <th>Accepting Subject</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var predmet in Model.Rows)
+                {
+                    <tr>
+                        <td>@predmet.PredmetHome</td>
+                        <td>@predmet.PredmetAccepting</td>
+                        <td>@predmet.Status</td>
+                        <td>
+                            @if (predmet.Status == SistemErasmusRazmjena.Models.StatusPredmeta.NACEKANJU)
+                            {
+                                <form asp-action="UpdateSubjectStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="predmetId" value="@predmet.PredmetID" />
+                                    <input type="hidden" name="status" value="ODBIJENO" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                </form>
+                                <form asp-action="UpdateSubjectStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="predmetId" value="@predmet.PredmetID" />
+                                    <input type="hidden" name="status" value="ODOBRENO" />
+                                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Nema dostupnih radnji</span>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to Applications</a>
