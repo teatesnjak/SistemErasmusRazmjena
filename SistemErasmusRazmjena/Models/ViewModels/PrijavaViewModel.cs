@@ -4,5 +4,7 @@ namespace SistemErasmusRazmjena.Models.ViewModels
     {
         public int ErasmusProgramID { get; set; }
         public List<PredmetViewModel> Predmeti { get; set; }
+
+
     }
 }

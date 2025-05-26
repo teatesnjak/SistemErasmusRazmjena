@@ -1,4 +1,6 @@
-﻿namespace SistemErasmusRazmjena.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SistemErasmusRazmjena.Models
 {
     public class PrijedlogPredmeta
     {
@@ -7,6 +9,7 @@
         public DateTime VrijemeIzmjene { get; set; } = DateTime.Now;
 
         public virtual List<Predmet> Rows { get; set; }
-
+        [NotMapped]
+        public virtual List<Predmet> NewSubjects { get; set; } = new List<Predmet>();
     }
 }

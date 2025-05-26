@@ -26,5 +26,4 @@ namespace SistemErasmusRazmjena.Models
 
         public StatusPrijave Status { get; set; } = StatusPrijave.UTOKU;
     }
-
 }

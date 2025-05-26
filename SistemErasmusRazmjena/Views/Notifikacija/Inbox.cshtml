@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Inbox";
+}
+
+<h1>Inbox</h1>
+
+<div>
+    <h2>Unread Notifications</h2>
+    @if (ViewBag.UnreadNotifications.Count == 0)
+    {
+        <p>No unread notifications.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var notification in ViewBag.UnreadNotifications)
+            {
+                <li>
+                    <span class="text-danger">?</span>
+                    @notification.Sadrzaj
+                    <form method="post" asp-action="MarkAsRead" asp-route-id="@notification.Id" style="display:inline;">
+                        <button type="submit" class="btn btn-link">Mark as Read</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    }
+
+    <h2>Read Notifications</h2>
+    @if (ViewBag.ReadNotifications.Count == 0)
+    {
+        <p>No read notifications.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var notification in ViewBag.ReadNotifications)
+            {
+                <li>@notification.Sadrzaj</li>
+            }
+        </ul>
+    }
+</div>

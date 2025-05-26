@@ -28,6 +28,7 @@
                         <td>@predmet.PredmetAccepting</td>
                         <td>@predmet.Status</td>
                         <td>
+                        <td>
                             @if (predmet.Status == SistemErasmusRazmjena.Models.StatusPredmeta.NACEKANJU)
                             {
                                 <form asp-action="UpdateSubjectStatus" method="post" class="d-inline">
@@ -46,6 +47,7 @@
                                 <span class="text-muted">Nema dostupnih radnji</span>
                             }
                         </td>
+
 
                     </tr>
                 }

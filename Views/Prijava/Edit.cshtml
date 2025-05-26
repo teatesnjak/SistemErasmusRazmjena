@@ -1,0 +1,48 @@
+@model SistemErasmusRazmjena.Models.Prijava
+@{
+    ViewData["Title"] = "Edit Application";
+}
+
+<h2>Edit Application</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="PrijavaID">Application ID</label>
+        <input type="text" class="form-control" id="PrijavaID" name="PrijavaID" value="@Model.PrijavaID" readonly />
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="MotivacionoPismo" name="MotivacionoPismo" @(Model.Dokumentacija?.MotivacionoPismo == true ? "checked" : "") />
+        <label class="form-check-label" for="MotivacionoPismo">Motivation Letter Provided</label>
+    </div>
+
+    <h4>Update Subjects</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Home Subject</th>
+                <th>Accepting Subject</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.PrijedlogPredmeta != null && Model.PrijedlogPredmeta.Rows != null && Model.PrijedlogPredmeta.Rows.Count > 0)
+            {
+                foreach (var row in Model.PrijedlogPredmeta.Rows)
+                {
+                    <tr>
+                        <td>@row.PredmetHome</td>
+                        <td>@row.PredmetAccepting</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="2">No subjects available.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

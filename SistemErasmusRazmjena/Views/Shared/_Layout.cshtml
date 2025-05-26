@@ -67,13 +67,10 @@
                                 <a class="nav-link text-dark" href="/Prijava/Index">Applications</a>
                             </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Prijava" asp-action="CreateCoordinator">Add Coordinator</a>
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="RegisterKoordinator">Add Coordinator</a>
                             </li>
                         }
 

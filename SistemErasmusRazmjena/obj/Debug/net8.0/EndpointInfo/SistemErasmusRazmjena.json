@@ -100,6 +100,123 @@
           }
         }
       }
+    },
+    "/Prijava/Edit/{id}": {
+      "post": {
+        "tags": [
+          "Prijava"
+        ],
+        "parameters": [
+          {
+            "name": "PrijavaID",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "ExistingSubjects",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PredmetViewModel"
+              }
+            }
+          },
+          {
+            "name": "NewSubjects",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PredmetViewModel"
+              }
+            }
+          },
+          {
+            "name": "Dokumentacija.CV",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "Dokumentacija.MotivacionoPismo",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "PrijedlogPredmeta.Rows",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PredmetRow"
+              }
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Prijava"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Prijava/EditCoordinator/{id}": {
+      "get": {
+        "tags": [
+          "Prijava"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -212,6 +329,42 @@
           "datum": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PredmetRow": {
+        "type": "object",
+        "properties": {
+          "predmetHome": {
+            "type": "string",
+            "nullable": true
+          },
+          "predmetAccepting": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PredmetViewModel": {
+        "type": "object",
+        "properties": {
+          "predmetHome": {
+            "type": "string",
+            "nullable": true
+          },
+          "predmetAccepting": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

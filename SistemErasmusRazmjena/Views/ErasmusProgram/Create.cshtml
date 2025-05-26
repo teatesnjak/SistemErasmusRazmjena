@@ -10,18 +10,23 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group mb-4">
                 <label asp-for="Semestar" class="control-label"></label>
-                <input asp-for="Semestar" class="form-control" />
+                <select asp-for="Semestar" class="form-control">
+                    <option value="1">Zimski</option>
+                    <option value="2">Ljetni</option>
+                </select>
                 <span asp-validation-for="Semestar" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group mb-4">
                 <label asp-for="AkademskaGodina" class="control-label"></label>
-                <input asp-for="AkademskaGodina" class="form-control" />
+                <input asp-for="AkademskaGodina" class="form-control" placeholder="e.g., 2023/2024" />
                 <span asp-validation-for="AkademskaGodina" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Univerzitet" class="control-label"></label>
                 <input asp-for="Univerzitet" class="form-control" />
@@ -29,29 +34,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Opis" class="control-label"></label>
-                <input asp-for="Opis" class="form-control" />
+                <textarea asp-for="Opis" class="form-control custom-width"></textarea>
                 <span asp-validation-for="Opis" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Check if the server has set the "AlreadyApplied" flag
-            var alreadyApplied = @((TempData["AlreadyApplied"] != null && (bool)TempData["AlreadyApplied"]).ToString().ToLower());
-            if (alreadyApplied) {
-                alert("You have already applied to this Erasmus program.");
-            }
-        });
-    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 

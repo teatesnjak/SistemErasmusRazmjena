@@ -1,4 +1,4 @@
-﻿@model SistemErasmusRazmjena.Models.Prijava
+﻿@model SistemErasmusRazmjena.Models.ViewModels.EditPrijavaViewModel
 
 @{
     ViewData["Title"] = "Edit Application";
@@ -7,15 +7,15 @@
 <h1>Edit Application</h1>
 
 <form asp-action="Resubmit" method="post">
-    <input type="hidden" name="id" value="@Model.ID" />
+    <input type="hidden" name="id" value="@Model.PrijavaID" />
 
     <h4>Update Documentation</h4>
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="CV" name="CV" @(Model.Dokumentacija.CV ? "checked" : "") />
+        <input class="form-check-input" type="checkbox" id="CV" name="CV" @(Model.Dokumentacija?.CV == true ? "checked" : "") />
         <label class="form-check-label" for="CV">CV Provided</label>
     </div>
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="MotivacionoPismo" name="MotivacionoPismo" @(Model.Dokumentacija.MotivacionoPismo ? "checked" : "") />
+        <input class="form-check-input" type="checkbox" id="MotivacionoPismo" name="MotivacionoPismo" @(Model.Dokumentacija?.MotivacionoPismo == true ? "checked" : "") />
         <label class="form-check-label" for="MotivacionoPismo">Motivation Letter Provided</label>
     </div>
 
@@ -25,22 +25,51 @@
             <tr>
                 <th>Home Subject</th>
                 <th>Accepting Subject</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @for (var i = 0; i < Model.PrijedlogPredmeta.Rows.Count; i++)
+            @foreach (var subject in Model.ExistingSubjects)
             {
-                <tr>
+                <tr class="@(subject.Status == "ODBIJENO" ? "table-danger" : "")">
                     <td>
-                        <input type="text" name="updatedSubjects[@i].PredmetHome" value="@Model.PrijedlogPredmeta.Rows[i].PredmetHome" class="form-control" />
+                        <input type="text" name="updatedSubjects[@subject.Id].PredmetHome" value="@subject.PredmetHome" class="form-control" />
                     </td>
                     <td>
-                        <input type="text" name="updatedSubjects[@i].PredmetAccepting" value="@Model.PrijedlogPredmeta.Rows[i].PredmetAccepting" class="form-control" />
+                        <input type="text" name="updatedSubjects[@subject.Id].PredmetAccepting" value="@subject.PredmetAccepting" class="form-control" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" onclick="removeSubject(this)">Delete</button>
                     </td>
                 </tr>
             }
+        </tbody>
+        <tbody id="newSubjects">
+            <tr>
+                <td colspan="3">
+                    <button type="button" class="btn btn-primary" onclick="addSubject()">Add New Subject</button>
+                </td>
+            </tr>
         </tbody>
     </table>
 
     <button type="submit" class="btn btn-success">Resubmit Application</button>
 </form>
+
+<script>
+    function addSubject() {
+        const table = document.getElementById('newSubjects');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><input type="text" name="newSubjects[][PredmetHome]" class="form-control" /></td>
+            <td><input type="text" name="newSubjects[][PredmetAccepting]" class="form-control" /></td>
+            <td><button type="button" class="btn btn-danger" onclick="removeSubject(this)">Delete</button></td>
+        `;
+        table.insertBefore(row, table.lastElementChild);
+    }
+
+    function removeSubject(button) {
+        button.closest('tr').remove();
+    }
+</script>
+

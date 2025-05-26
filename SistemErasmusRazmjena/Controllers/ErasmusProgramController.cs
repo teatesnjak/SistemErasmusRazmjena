@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace SistemErasmusRazmjena.Controllers
 {
-    // Ensure no changes are made to the base class or interfaces during runtime
     public class ErasmusProgramController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,7 +19,9 @@ namespace SistemErasmusRazmjena.Controllers
         // GET: ErasmusProgram
         public async Task<IActionResult> Index()
         {
-            var list = await _context.ErasmusProgrami.ToListAsync();
+            var list = await _context.ErasmusProgrami
+                .OrderByDescending(p => p.DateAdded) // Sort by DateAdded in descending order
+                .ToListAsync();
             return View(list);
         }
 
@@ -54,14 +55,22 @@ namespace SistemErasmusRazmjena.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Semestar,AkademskaGodina,Univerzitet,Opis")] ErasmusProgram model)
+        public async Task<IActionResult> Create([Bind("Semestar,AkademskaGodina,Univerzitet,Opis,Name")] ErasmusProgram model)
         {
             if (ModelState.IsValid)
             {
+                model.DateAdded = DateTime.UtcNow; // Automatically set the current date and time
                 _context.Add(model);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Log validation errors
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+
             return View(model);
         }
 
@@ -86,7 +95,7 @@ namespace SistemErasmusRazmjena.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Semestar,AkademskaGodina,Univerzitet,Opis")] ErasmusProgram model)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Semestar,AkademskaGodina,Univerzitet,Opis,Name")] ErasmusProgram model)
         {
             if (id != model.ID)
             {
@@ -153,7 +162,7 @@ namespace SistemErasmusRazmjena.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // API Methods - If you still want them, add them with explicit routes
+        // API Methods
         [HttpGet("api/erasmusprogram")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAll()
