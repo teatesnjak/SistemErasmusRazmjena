@@ -2,7 +2,7 @@ using SistemErasmusRazmjena.Models;
 
 public class PrijavaSegmentedViewModel
 {
-    public List<Prijava> InProgress { get; set; }
-    public List<Prijava> Successful { get; set; }
-    public List<Prijava> Unsuccessful { get; set; }
+    public List<Prijava> UTOKU { get; set; }
+    public List<Prijava> USPJESNA { get; set; }
+    public List<Prijava> NEUSPJESNA { get; set; }
 }

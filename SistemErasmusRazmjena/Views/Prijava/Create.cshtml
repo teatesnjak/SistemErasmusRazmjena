@@ -1,55 +1,91 @@
 ﻿@model SistemErasmusRazmjena.Models.ViewModels.PrijavaCreateViewModel
 
 @{
-    ViewData["Title"] = "Apply for Erasmus Program";
+    ViewData["Title"] = "Nova prijava";
 }
+
+<h2>Nova prijava</h2>
+
 <form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-
+    @* Hidden polja – OBAVEZNO *@
     <input type="hidden" asp-for="ErasmusProgramID" />
-    <input type="hidden" asp-for="ProgramName" />
     <input type="hidden" asp-for="StudentID" />
+    <input type="hidden" asp-for="DokumentacijaOptions" />
+    <input type="hidden" asp-for="PrijedlogPredmeta" />
 
-    <div class="form-group">
-        <label>Academic Year</label>
-        <p class="form-control-plaintext">@Model.AkademskaGodina</p> <!-- Display-only -->
+    <div>
+        <h3>Erasmus Program Details</h3>
+        <p><strong>Akademska godina:</strong> @Model.AkademskaGodina</p>
+        <p><strong>Naziv:</strong> @Model.Naziv</p>
+        <p><strong>Semestar:</strong> @Model.Semestar</p>
+        <p><strong>Opis:</strong> @Model.Opis</p>
     </div>
 
-    <div class="form-group mb-4">
-        <label>Semester</label>
-        <p class="form-control-plaintext">@Model.Semestar</p> <!-- Display-only -->
+    <div>
+        <h3>Documentation</h3>
+        <label>
+            <input type="checkbox" asp-for="DokumentacijaOptions.CV" /> CV
+        </label>
+        <label>
+            <input type="checkbox" asp-for="DokumentacijaOptions.MotivacionoPismo" /> Motivational Letter
+        </label>
+        <label>
+            <input type="checkbox" asp-for="DokumentacijaOptions.UgovorOUcenju" /> Learning Agreement
+        </label>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-header bg-light">
-            <h5 class="mb-0">Required Documentation</h5>
-        </div>
-        <div class="card-body">
-            <p class="text-muted mb-3">Please check the documents you have prepared and are ready to submit:</p>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" asp-for="CV" id="cv">
-                <label class="form-check-label" for="cv">CV/Resume</label>
-            </div>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" asp-for="MotivacionoPismo" id="motivationLetter">
-                <label class="form-check-label" for="motivationLetter">Motivation Letter</label>
-            </div>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" asp-for="UgovorOUcenju" id="learningAgreement">
-                <label class="form-check-label" for="learningAgreement">Learning Agreement</label>
-            </div>
-        </div>
+    <div>
+        <h3>Subjects</h3>
+        <table id="subjectsTable">
+            <thead>
+                <tr>
+                    <th>Subject Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.PrijedlogPredmeta.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input type="text" asp-for="PrijedlogPredmeta[@i].PredmetHome" class="form-control" />
+                            <input type="hidden" asp-for="PrijedlogPredmeta[@i].PredmetID" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="removeSubject(this)">Remove</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-secondary" onclick="addSubject()">Add Subject</button>
     </div>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    </section>
 
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-5">
-        <a asp-controller="ErasmusProgram" asp-action="Details" asp-route-id="@Model.ErasmusProgramID" class="btn btn-outline-secondary">
-            <i class="bi bi-x-circle me-1"></i> Cancel
-        </a>
-        <button type="submit" class="btn btn-success">
-            <i class="bi bi-check2-circle me-1"></i> Submit Application
-        </button>
-    </div>
+    <button type="submit" class="btn btn-primary">Sačuvaj</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
 </form>
+@section Scripts {
+    <script>
+        function addSubject() {
+            const table = document.getElementById('subjectsTable').getElementsByTagName('tbody')[0];
+            const rowCount = table.rows.length;
+            const row = table.insertRow(rowCount);
+
+            const cell1 = row.insertCell(0);
+            cell1.innerHTML = `<input type="text" name="PrijedlogPredmeta[${rowCount}].PredmetHome" class="form-control" />` +
+                              `<input type="hidden" name="PrijedlogPredmeta[${rowCount}].PredmetID" value="0" />`;
+
+            const cell2 = row.insertCell(1);
+            cell2.innerHTML = `<button type="button" class="btn btn-danger" onclick="removeSubject(this)">Remove</button>`;
+        }
+
+        function removeSubject(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+    </script>
+}

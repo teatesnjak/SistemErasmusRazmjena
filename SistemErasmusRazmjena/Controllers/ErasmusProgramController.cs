@@ -57,7 +57,7 @@ namespace SistemErasmusRazmjena.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Semestar,AkademskaGodina,Univerzitet,Opis,Name")] ErasmusProgram model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 model.DateAdded = DateTime.UtcNow; // Automatically set the current date and time
                 _context.Add(model);
@@ -71,8 +71,10 @@ namespace SistemErasmusRazmjena.Controllers
                 Console.WriteLine(error.ErrorMessage);
             }
 
-            return View(model);
-        }
+            _context.ErasmusProgrami.Add(model);
+       await _context.SaveChangesAsync();
+       return RedirectToAction(nameof(Index));
+   }
 
         // GET: ErasmusProgram/Edit/5
         [Authorize(Roles = "Admin")]
@@ -95,35 +97,61 @@ namespace SistemErasmusRazmjena.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Semestar,AkademskaGodina,Univerzitet,Opis,Name")] ErasmusProgram model)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Semestar,AkademskaGodina,Univerzitet,Opis,DateAdded")] ErasmusProgram model)
         {
+            Console.WriteLine($"Edit method called with ID: {id}");
+
             if (id != model.ID)
             {
-                return NotFound();
+                Console.WriteLine("ID mismatch between route and model.");
+                ModelState.AddModelError("", "ID mismatch. Please try again.");
+                return View(model);
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                Console.WriteLine("Model validation failed.");
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    _context.Update(model);
-                    await _context.SaveChangesAsync();
+                    Console.WriteLine($"Validation Error: {error.ErrorMessage}");
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.ErasmusProgrami.Any(e => e.ID == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            return View(model);
+
+            try
+            {
+                var existingProgram = await _context.ErasmusProgrami.AsNoTracking().FirstOrDefaultAsync(e => e.ID == id);
+                if (existingProgram == null)
+                {
+                    Console.WriteLine("Program not found in the database.");
+                    return NotFound();
+                }
+
+                model.DateAdded = existingProgram.DateAdded;
+
+                _context.Update(model);
+                await _context.SaveChangesAsync();
+                Console.WriteLine("Program updated successfully.");
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Console.WriteLine($"Concurrency exception: {ex.Message}");
+                if (!_context.ErasmusProgrami.Any(e => e.ID == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            TempData["SuccessMessage"] = "Erasmus program updated successfully.";
+            return RedirectToAction(nameof(Index));
         }
+
+
+
 
         // GET: ErasmusProgram/Delete/5
         [Authorize(Roles = "Admin")]

@@ -1,46 +1,41 @@
 ﻿@model SistemErasmusRazmjena.Models.ErasmusProgram
 
-@{
-    ViewData["Title"] = "Edit";
-}
+<h1>Edit Erasmus Program</h1>
 
-<h1>Edit</h1>
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ID" />
 
-<h4>ErasmusProgram</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <label asp-for="Semestar" class="control-label"></label>
-                <input asp-for="Semestar" class="form-control" />
-                <span asp-validation-for="Semestar" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AkademskaGodina" class="control-label"></label>
-                <input asp-for="AkademskaGodina" class="form-control" />
-                <span asp-validation-for="AkademskaGodina" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Univerzitet" class="control-label"></label>
-                <input asp-for="Univerzitet" class="form-control" />
-                <span asp-validation-for="Univerzitet" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Opis" class="control-label"></label>
-                <textarea asp-for="Opis" class="form-control custom-width"></textarea>
-                <span asp-validation-for="Opis" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-4">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
-            </div>
-        </form>
+    <div class="form-group">
+        <label asp-for="Semestar" class="control-label"></label>
+        <select asp-for="Semestar" class="form-control">
+            <option value="1" selected="@(Model.Semestar == 1)">Zimski</option>
+            <option value="2" selected="@(Model.Semestar == 2)">Ljetni</option>
+        </select>
+        <span asp-validation-for="Semestar" class="text-danger"></span>
     </div>
-</div>
 
+    <div class="form-group">
+        <label asp-for="AkademskaGodina" class="control-label"></label>
+        <input asp-for="AkademskaGodina" class="form-control" />
+        <span asp-validation-for="AkademskaGodina" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Univerzitet" class="control-label"></label>
+        <input asp-for="Univerzitet" class="form-control" />
+        <span asp-validation-for="Univerzitet" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Opis" class="control-label"></label>
+        <textarea asp-for="Opis" class="form-control"></textarea>
+        <span asp-validation-for="Opis" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

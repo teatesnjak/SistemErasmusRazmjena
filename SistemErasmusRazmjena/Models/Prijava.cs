@@ -5,7 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SistemErasmusRazmjena.Models
 {
-    public enum StatusPrijave { UTOKU, USPJESNA, NEUSPJESNA }
+    public enum StatusPrijave 
+    { 
+        UTOKU = 0, 
+        USPJESNA = 1, 
+        NEUSPJESNA = 2
+    }
 
     public class Prijava
     {
@@ -25,5 +30,8 @@ namespace SistemErasmusRazmjena.Models
         public virtual PrijedlogPredmeta PrijedlogPredmeta { get; set; }
 
         public StatusPrijave Status { get; set; } = StatusPrijave.UTOKU;
+
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+
     }
 }

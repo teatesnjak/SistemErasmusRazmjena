@@ -20,14 +20,14 @@
         <!-- In Progress Applications -->
         <div class="col-md-4">
             <h3 class="text-warning">In Progress</h3>
-            @if (!Model.InProgress.Any())
+            @if (!Model.UTOKU.Any())
             {
                 <p>No applications in progress.</p>
             }
             else
             {
                 <ul class="list-group">
-                    @foreach (var item in Model.InProgress)
+                    @foreach (var item in Model.UTOKU)
                     {
                         <li class="list-group-item">
                             <strong>@item.Student.FirstName @item.Student.LastName</strong> - @item.ErasmusProgram.Univerzitet
@@ -47,14 +47,14 @@
         <!-- Successful Applications -->
         <div class="col-md-4">
             <h3 class="text-success">Successful</h3>
-            @if (!Model.Successful.Any())
+            @if (!Model.USPJESNA.Any())
             {
                 <p>No successful applications.</p>
             }
             else
             {
                 <ul class="list-group">
-                    @foreach (var item in Model.Successful)
+                    @foreach (var item in Model.USPJESNA)
                     {
                         <li class="list-group-item">
                             <strong>@item.Student.FirstName @item.Student.LastName</strong> - @item.ErasmusProgram.Univerzitet
@@ -77,14 +77,14 @@
         <!-- Unsuccessful Applications -->
         <div class="col-md-4">
             <h3 class="text-danger">Unsuccessful</h3>
-            @if (!Model.Unsuccessful.Any())
+            @if (!Model.NEUSPJESNA.Any())
             {
                 <p>No unsuccessful applications.</p>
             }
             else
             {
                 <ul class="list-group">
-                    @foreach (var item in Model.Unsuccessful)
+                    @foreach (var item in Model.NEUSPJESNA)
                     {
                         <li class="list-group-item">
                             <strong>@item.Student.FirstName @item.Student.LastName</strong> - @item.ErasmusProgram.Univerzitet

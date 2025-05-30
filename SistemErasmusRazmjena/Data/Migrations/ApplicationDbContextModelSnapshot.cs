@@ -292,10 +292,6 @@ namespace SistemErasmusRazmjena.Data.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Opis")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -398,6 +394,9 @@ namespace SistemErasmusRazmjena.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("DokumentacijaID")
                         .HasColumnType("int");
 
@@ -437,6 +436,9 @@ namespace SistemErasmusRazmjena.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<int?>("ErasmusProgramID")
+                        .HasColumnType("int");
+
                     b.Property<int>("PrijavaID")
                         .HasColumnType("int");
 
@@ -444,6 +446,8 @@ namespace SistemErasmusRazmjena.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ErasmusProgramID");
 
                     b.ToTable("PrijedloziPredmeta");
                 });
@@ -552,6 +556,15 @@ namespace SistemErasmusRazmjena.Data.Migrations
                     b.Navigation("PrijedlogPredmeta");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SistemErasmusRazmjena.Models.PrijedlogPredmeta", b =>
+                {
+                    b.HasOne("SistemErasmusRazmjena.Models.ErasmusProgram", "ErasmusProgram")
+                        .WithMany()
+                        .HasForeignKey("ErasmusProgramID");
+
+                    b.Navigation("ErasmusProgram");
                 });
 
             modelBuilder.Entity("SistemErasmusRazmjena.Models.PrijedlogPredmeta", b =>

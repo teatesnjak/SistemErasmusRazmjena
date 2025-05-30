@@ -20,5 +20,6 @@ namespace SistemErasmusRazmjena.Models
         public string Opis { get; set; }
 
         public DateTime DateAdded { get; set; } // Add this property
+
     }
 }
