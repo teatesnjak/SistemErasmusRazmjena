@@ -143,9 +143,24 @@ namespace SistemErasmusRazmjena.Controllers
 
             var viewModel = new PrijavaViewModel
             {
+                PrijavaID = prijava.ID,
                 ErasmusProgramID = prijava.ErasmusProgramID,
+                StudentID = prijava.StudentID,
+                StudentName = prijava.Student?.UserName ?? "Unknown",
+                AkademskaGodina = prijava.ErasmusProgram?.AkademskaGodina ?? "Unknown",
+                Naziv = prijava.ErasmusProgram?.Univerzitet ?? "Unknown",
+                Semestar = prijava.ErasmusProgram?.Semestar.ToString() ?? "Unknown",
+                Opis = prijava.ErasmusProgram?.Opis ?? "No description available",
+                Status = prijava.Status,
+                DokumentacijaOptions = new DokumentacijaOptionsViewModel
+                {
+                    CV = prijava.Dokumentacija?.CV ?? false,
+                    MotivacionoPismo = prijava.Dokumentacija?.MotivacionoPismo ?? false,
+                    UgovorOUcenju = prijava.Dokumentacija?.UgovorOUcenju ?? false
+                },
                 Predmeti = prijava.PrijedlogPredmeta.Rows.Select(r => new PredmetViewModel
                 {
+                    Id = r.PredmetID,
                     PredmetHome = r.PredmetHome,
                     PredmetAccepting = r.PredmetAccepting,
                     Status = r.Status.ToString()
@@ -154,7 +169,9 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (User.IsInRole("Admin")) return View(viewModel);
 
-            if (User.IsInRole("ECTSKoordinator") && prijava.Student?.FakultetID == currentUser.FakultetID && prijava.Status == StatusPrijave.UTOKU)
+            if (User.IsInRole("ECTSKoordinator") &&
+                prijava.Student?.FakultetID == currentUser.FakultetID &&
+                prijava.Status == StatusPrijaveAlias.UTOKU)
             {
                 return View("ManageSubjects", viewModel);
             }
@@ -163,6 +180,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             return View(viewModel);
         }
+
 
         [HttpGet]
         [Authorize(Roles = "Student")]
@@ -183,34 +201,50 @@ namespace SistemErasmusRazmjena.Controllers
             }
 
             var availableSubjects = await _context.Predmeti.ToListAsync();
+            // In the Create GET method, update the PrijedlogPredmeta initialization
             var viewModel = new PrijavaCreateViewModel
             {
                 ErasmusProgramID = programId,
                 StudentID = user.Id,
                 AkademskaGodina = erasmusProgram.AkademskaGodina,
-                Naziv = erasmusProgram.Univerzitet, // Changed from erasmusProgram.ID to erasmusProgram.Univerzitet
+                Naziv = erasmusProgram.Univerzitet,
                 Semestar = erasmusProgram.Semestar.ToString(),
                 Opis = erasmusProgram.Opis,
                 DokumentacijaOptions = new DokumentacijaOptions(),
-                PrijedlogPredmeta = availableSubjects.Select(s => new Subject
+                PrijedlogPredmeta = availableSubjects.Select(s => new Predmet // Changed from Subject to Predmet
                 {
                     PredmetID = s.PredmetID,
-                    PredmetHome = s.PredmetHome
+                    PredmetHome = s.PredmetHome,
+                    PredmetAccepting = "", // Initialize with empty string
+                    Status = StatusPredmeta.NACEKANJU
                 }).ToList(),
                 Status = StatusPrijave.UTOKU
             };
+
 
 
             return View(viewModel);
         }
 
 
+        // Modify the Create method to return to the correct view with the correct model type
         [HttpPost]
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Create(PrijavaCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
+                // Filter out any empty entries in PrijedlogPredmeta
+                model.PrijedlogPredmeta = model.PrijedlogPredmeta
+                    .Where(p => !string.IsNullOrEmpty(p.PredmetHome) && !string.IsNullOrEmpty(p.PredmetAccepting))
+                    .ToList();
+
+                if (model.PrijedlogPredmeta.Count == 0)
+                {
+                    ModelState.AddModelError("", "At least one subject must be provided");
+                    return View(model);
+                }
+
                 var prijava = new Prijava
                 {
                     ErasmusProgramID = model.ErasmusProgramID,
@@ -229,7 +263,8 @@ namespace SistemErasmusRazmjena.Controllers
                         {
                             PredmetID = p.PredmetID,
                             PredmetHome = p.PredmetHome,
-                            Status = StatusPredmeta.NACEKANJU // Default status
+                            PredmetAccepting = p.PredmetAccepting, // Make sure this is set
+                            Status = StatusPredmeta.NACEKANJU
                         }).ToList()
                     },
                     Status = StatusPrijave.UTOKU,
@@ -239,12 +274,13 @@ namespace SistemErasmusRazmjena.Controllers
                 _context.Prijave.Add(prijava);
                 await _context.SaveChangesAsync();
 
-                // Redirect to the home page
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(MyApplications));
             }
 
             return View(model);
         }
+
+
 
 
 

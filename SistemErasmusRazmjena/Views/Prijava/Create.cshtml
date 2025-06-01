@@ -10,8 +10,7 @@
     @* Hidden polja – OBAVEZNO *@
     <input type="hidden" asp-for="ErasmusProgramID" />
     <input type="hidden" asp-for="StudentID" />
-    <input type="hidden" asp-for="DokumentacijaOptions" />
-    <input type="hidden" asp-for="PrijedlogPredmeta" />
+    <input type="hidden" asp-for="Status" />
 
     <div>
         <h3>Erasmus Program Details</h3>
@@ -36,56 +35,103 @@
 
     <div>
         <h3>Subjects</h3>
-        <table id="subjectsTable">
+        <table id="subjectsTable" class="table">
             <thead>
                 <tr>
-                    <th>Subject Name</th>
+                    <th>Home University Subject</th>
+                    <th>Accepting University Subject</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                @for (int i = 0; i < Model.PrijedlogPredmeta.Count; i++)
-                {
-                    <tr>
-                        <td>
-                            <input type="text" asp-for="PrijedlogPredmeta[@i].PredmetHome" class="form-control" />
-                            <input type="hidden" asp-for="PrijedlogPredmeta[@i].PredmetID" />
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger" onclick="removeSubject(this)">Remove</button>
-                        </td>
-                    </tr>
-                }
+            <tbody id="subjectRows">
+                <tr class="subject-row">
+                    <td>
+                        <input type="text" name="PrijedlogPredmeta[0].PredmetHome" class="form-control" required />
+                    </td>
+                    <td>
+                        <input type="text" name="PrijedlogPredmeta[0].PredmetAccepting" class="form-control" required />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger remove-row">Remove</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-secondary" onclick="addSubject()">Add Subject</button>
+        <button type="button" id="addSubjectRow" class="btn btn-primary">Add Subject</button>
     </div>
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    
-    </section>
 
-    <button type="submit" class="btn btn-primary">Sačuvaj</button>
-    <div asp-validation-summary="All" class="text-danger"></div>
-
+    <div class="card-body mt-4">
+        <div class="d-grid gap">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </div>
 </form>
+
 @section Scripts {
     <script>
-        function addSubject() {
-            const table = document.getElementById('subjectsTable').getElementsByTagName('tbody')[0];
-            const rowCount = table.rows.length;
-            const row = table.insertRow(rowCount);
+        $(document).ready(function() {
+            // Handle adding new row
+            $("#addSubjectRow").click(function() {
+                let rowCount = $("#subjectRows .subject-row").length;
+                let newRow = `
+                    <tr class="subject-row">
+                        <td>
+                            <input type="text" name="PrijedlogPredmeta[${rowCount}].PredmetHome" class="form-control" required />
+                        </td>
+                        <td>
+                            <input type="text" name="PrijedlogPredmeta[${rowCount}].PredmetAccepting" class="form-control" required />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger remove-row">Remove</button>
+                        </td>
+                    </tr>
+                `;
+                $("#subjectRows").append(newRow);
+            });
 
-            const cell1 = row.insertCell(0);
-            cell1.innerHTML = `<input type="text" name="PrijedlogPredmeta[${rowCount}].PredmetHome" class="form-control" />` +
-                              `<input type="hidden" name="PrijedlogPredmeta[${rowCount}].PredmetID" value="0" />`;
+            // Handle removing row (delegated event for dynamically added elements)
+            $("#subjectsTable").on("click", ".remove-row", function() {
+                // Don't remove if it's the last row
+                if ($("#subjectRows .subject-row").length > 1) {
+                    $(this).closest("tr").remove();
 
-            const cell2 = row.insertCell(1);
-            cell2.innerHTML = `<button type="button" class="btn btn-danger" onclick="removeSubject(this)">Remove</button>`;
-        }
+                    // Renumber the inputs to ensure they're sequential
+                    $("#subjectRows .subject-row").each(function(index) {
+                        $(this).find("input").each(function() {
+                            let name = $(this).attr("name");
+                            let newName = name.replace(/\[\d+\]/, `[${index}]`);
+                            $(this).attr("name", newName);
+                        });
+                    });
+                } else {
+                    // If it's the last row, just clear the inputs
+                    $(this).closest("tr").find("input").val("");
+                }
+            });
 
-        function removeSubject(button) {
-            const row = button.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-        }
+            // Validate form on submit
+            $("form").on("submit", function(e) {
+                let isValid = true;
+
+                // Check if any subject rows are empty
+                $(".subject-row").each(function() {
+                    const homeSubject = $(this).find("input[name$='.PredmetHome']").val();
+                    const acceptingSubject = $(this).find("input[name$='.PredmetAccepting']").val();
+
+                    if (!homeSubject || !acceptingSubject) {
+                        isValid = false;
+                        // Mark the empty inputs
+                        if (!homeSubject) $(this).find("input[name$='.PredmetHome']").addClass("is-invalid");
+                        if (!acceptingSubject) $(this).find("input[name$='.PredmetAccepting']").addClass("is-invalid");
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert("Please fill in both home and accepting university subjects for all rows.");
+                }
+            });
+        });
     </script>
 }
+
