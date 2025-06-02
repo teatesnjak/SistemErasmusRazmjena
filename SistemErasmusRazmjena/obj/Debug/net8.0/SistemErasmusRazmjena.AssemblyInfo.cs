@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SistemErasmusRazmjena")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+778f78e60f7087d8934609974f259077b3e73511")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4fb1226cf3a1b7d1372243ffd2b93a1cec07949f")]
 [assembly: System.Reflection.AssemblyProductAttribute("SistemErasmusRazmjena")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SistemErasmusRazmjena")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

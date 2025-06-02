@@ -1,0 +1,362 @@
+﻿@model SistemErasmusRazmjena.Models.ViewModels.SearchViewModel
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<div class="container mt-4">
+    <h2>Search Results for "@Model.Query"</h2>
+
+    <form asp-action="Results" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" id="searchInput" name="query" class="form-control"
+                   placeholder="Refine your search..."
+                   value="@Model.Query" required />
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+        <small class="form-text text-muted">
+            Try searching for "Winter", "Summer", "UTOKU" (in progress), "USPJESNA" (approved), "NEUSPJESNA" (rejected)
+        </small>
+    </form>
+
+    <div class="row">
+        <div class="col-12">
+            @if (Model.Programs.Count == 0 &&
+                        Model.Applications.UTOKU.Count == 0 &&
+                        Model.Applications.USPJESNA.Count == 0 &&
+                        Model.Applications.NEUSPJESNA.Count == 0)
+            {
+                <div class="alert alert-info">
+                    <p class="mb-0">No results found for "<strong>@Model.Query</strong>". Try using different keywords.</p>
+                </div>
+            }
+            else
+            {
+                <!-- Programs Section -->
+                @if (Model.Programs.Count > 0)
+                {
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3>Erasmus Programs (@Model.Programs.Count)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>University</th>
+                                            <th>Academic Year</th>
+                                            <th>Semester</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var program in Model.Programs)
+                                        {
+                                            <tr>
+                                                <td>@program.Univerzitet</td>
+                                                <td>@program.AkademskaGodina</td>
+                                                <td>@(program.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>
+                                                    <a asp-controller="ErasmusProgram" asp-action="Details" asp-route-id="@program.ID"
+                                                       class="btn btn-sm btn-info">View Details</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Applications Sections -->
+                @if (Model.Applications.UTOKU.Count > 0)
+                {
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h3>In Progress Applications (@Model.Applications.UTOKU.Count)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th>University</th>
+                                            <th>Academic Year</th>
+                                            <th>Semester</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var application in Model.Applications.UTOKU)
+                                        {
+                                            <tr>
+                                                <td>@application.Student.UserName</td>
+                                                <td>@application.ErasmusProgram.Univerzitet</td>
+                                                <td>@application.ErasmusProgram.AkademskaGodina</td>
+                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>
+                                                    <a asp-controller="Prijava" asp-action="Details" asp-route-id="@application.ID"
+                                                       class="btn btn-sm btn-info">View Details</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.Applications.USPJESNA.Count > 0)
+                {
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h3>Approved Applications (@Model.Applications.USPJESNA.Count)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th>University</th>
+                                            <th>Academic Year</th>
+                                            <th>Semester</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var application in Model.Applications.USPJESNA)
+                                        {
+                                            <tr>
+                                                <td>@application.Student.UserName</td>
+                                                <td>@application.ErasmusProgram.Univerzitet</td>
+                                                <td>@application.ErasmusProgram.AkademskaGodina</td>
+                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>
+                                                    <a asp-controller="Prijava" asp-action="Details" asp-route-id="@application.ID"
+                                                       class="btn btn-sm btn-info">View Details</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.Applications.NEUSPJESNA.Count > 0)
+                {
+                    <div class="card mb-4">
+                        <div class="card-header bg-danger text-white">
+                            <h3>Rejected Applications (@Model.Applications.NEUSPJESNA.Count)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Student</th>
+                                            <th>University</th>
+                                            <th>Academic Year</th>
+                                            <th>Semester</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var application in Model.Applications.NEUSPJESNA)
+                                        {
+                                            <tr>
+                                                <td>@application.Student.UserName</td>
+                                                <td>@application.ErasmusProgram.Univerzitet</td>
+                                                <td>@application.ErasmusProgram.AkademskaGodina</td>
+                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>
+                                                    <a asp-controller="Prijava" asp-action="Details" asp-route-id="@application.ID"
+                                                       class="btn btn-sm btn-info">View Details</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const inputGroup = searchInput.closest('.input-group');
+            const suggestionsContainer = document.createElement('div');
+
+            suggestionsContainer.className = 'suggestions-container';
+            suggestionsContainer.style.display = 'none';
+            suggestionsContainer.style.position = 'absolute';
+            suggestionsContainer.style.width = inputGroup.offsetWidth + 'px';
+            suggestionsContainer.style.top = (inputGroup.offsetTop + inputGroup.offsetHeight) + 'px';
+            suggestionsContainer.style.left = inputGroup.offsetLeft + 'px';
+            suggestionsContainer.style.zIndex = '1000';
+            suggestionsContainer.style.backgroundColor = 'white';
+            suggestionsContainer.style.border = '1px solid #ccc';
+            suggestionsContainer.style.borderRadius = '4px';
+            suggestionsContainer.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+            suggestionsContainer.style.maxHeight = '200px';
+            suggestionsContainer.style.overflowY = 'auto';
+            suggestionsContainer.style.marginTop = '5px';
+
+            // Append to the form rather than next to the input
+            const form = searchInput.closest('form');
+            form.appendChild(suggestionsContainer);
+
+            let debounceTimer;
+            let selectedIndex = -1;
+            let suggestions = [];
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                selectedIndex = -1;
+
+                clearTimeout(debounceTimer);
+
+                if (query.length < 2) {
+                    suggestionsContainer.style.display = 'none';
+                    return;
+                }
+
+                // Recalculate position in case page has been resized
+                suggestionsContainer.style.width = inputGroup.offsetWidth + 'px';
+                suggestionsContainer.style.left = inputGroup.offsetLeft + 'px';
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/Search/Suggestions?query=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsContainer.innerHTML = '';
+                            suggestions = data;
+
+                            if (data.length > 0) {
+                                data.forEach((suggestion, index) => {
+                                    const div = document.createElement('div');
+                                    div.className = 'suggestion-item';
+                                    div.style.padding = '8px 12px';
+                                    div.style.cursor = 'pointer';
+                                    div.textContent = suggestion;
+                                    div.setAttribute('data-index', index);
+
+                                    div.addEventListener('mouseenter', function() {
+                                        this.style.backgroundColor = '#f0f0f0';
+                                        selectedIndex = parseInt(this.getAttribute('data-index'));
+                                    });
+
+                                    div.addEventListener('mouseleave', function() {
+                                        if (parseInt(this.getAttribute('data-index')) !== selectedIndex) {
+                                            this.style.backgroundColor = 'white';
+                                        }
+                                    });
+
+                                    div.addEventListener('click', function() {
+                                        searchInput.value = this.textContent;
+                                        suggestionsContainer.style.display = 'none';
+                                        // Submit the form automatically
+                                        form.submit();
+                                    });
+
+                                    suggestionsContainer.appendChild(div);
+                                });
+
+                                suggestionsContainer.style.display = 'block';
+                            } else {
+                                suggestionsContainer.style.display = 'none';
+                            }
+                        });
+                }, 300); // Debounce delay
+            });
+
+            // Add keyboard navigation
+            searchInput.addEventListener('keydown', function(e) {
+                const suggestionItems = suggestionsContainer.querySelectorAll('.suggestion-item');
+
+                // If suggestions are not displayed, do nothing
+                if (suggestionsContainer.style.display === 'none') return;
+
+                // Down arrow
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (selectedIndex < suggestionItems.length - 1) {
+                        if (selectedIndex >= 0) {
+                            suggestionItems[selectedIndex].style.backgroundColor = 'white';
+                        }
+                        selectedIndex++;
+                        suggestionItems[selectedIndex].style.backgroundColor = '#f0f0f0';
+                        ensureVisible(suggestionItems[selectedIndex], suggestionsContainer);
+                    }
+                }
+                // Up arrow
+                else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (selectedIndex > 0) {
+                        suggestionItems[selectedIndex].style.backgroundColor = 'white';
+                        selectedIndex--;
+                        suggestionItems[selectedIndex].style.backgroundColor = '#f0f0f0';
+                        ensureVisible(suggestionItems[selectedIndex], suggestionsContainer);
+                    }
+                }
+                // Enter key
+                else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    searchInput.value = suggestions[selectedIndex];
+                    suggestionsContainer.style.display = 'none';
+                    form.submit();
+                }
+                // Escape key
+                else if (e.key === 'Escape') {
+                    suggestionsContainer.style.display = 'none';
+                    selectedIndex = -1;
+                }
+            });
+
+            // Helper function to ensure selected item is visible in the scrollable container
+            function ensureVisible(element, container) {
+                const containerTop = container.scrollTop;
+                const containerBottom = containerTop + container.clientHeight;
+                const elementTop = element.offsetTop;
+                const elementBottom = elementTop + element.clientHeight;
+
+                if (elementTop < containerTop) {
+                    container.scrollTop = elementTop;
+                } else if (elementBottom > containerBottom) {
+                    container.scrollTop = elementBottom - container.clientHeight;
+                }
+            }
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.style.display = 'none';
+                    selectedIndex = -1;
+                }
+            });
+
+            // Adjust position on window resize
+            window.addEventListener('resize', function() {
+                if (suggestionsContainer.style.display !== 'none') {
+                    suggestionsContainer.style.width = inputGroup.offsetWidth + 'px';
+                    suggestionsContainer.style.left = inputGroup.offsetLeft + 'px';
+                }
+            });
+        });
+    </script>
+}
+

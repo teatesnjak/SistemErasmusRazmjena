@@ -1,0 +1,205 @@
+﻿@model SistemErasmusRazmjena.Models.ViewModels.SearchViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="bi bi-search"></i> Search Programs and Applications</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Results" method="get" class="mb-4">
+                        <div class="input-group">
+                            <input type="text" id="searchInput" name="query" class="form-control form-control-lg"
+                                   placeholder="Search by university, semester, status, subject..."
+                                   value="@Model.Query" required />
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </div>
+                        <small class="form-text text-muted mt-2">
+                            Search for programs and applications by any keyword. Try terms like "Winter", "Summer", "UTOKU", "USPJESNA", "NEUSPJESNA".
+                        </small>
+                    </form>
+
+                    @if (!string.IsNullOrEmpty(Model.Query))
+                    {
+                        <div class="alert alert-info">
+                            <p class="mb-0">No results found for "<strong>@Model.Query</strong>". Try using different keywords.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const inputGroup = searchInput.closest('.input-group');
+            const suggestionsContainer = document.createElement('div');
+
+            suggestionsContainer.className = 'suggestions-container';
+            suggestionsContainer.style.display = 'none';
+            suggestionsContainer.style.position = 'absolute';
+            suggestionsContainer.style.width = inputGroup.offsetWidth + 'px';
+            suggestionsContainer.style.top = (inputGroup.offsetTop + inputGroup.offsetHeight) + 'px';
+            suggestionsContainer.style.left = inputGroup.offsetLeft + 'px';
+            suggestionsContainer.style.zIndex = '1000';
+            suggestionsContainer.style.backgroundColor = 'white';
+            suggestionsContainer.style.border = '1px solid #ccc';
+            suggestionsContainer.style.borderRadius = '4px';
+            suggestionsContainer.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+            suggestionsContainer.style.maxHeight = '200px';
+            suggestionsContainer.style.overflowY = 'auto';
+            suggestionsContainer.style.marginTop = '5px';
+
+            // Append to the form rather than next to the input
+            const form = searchInput.closest('form');
+            form.appendChild(suggestionsContainer);
+
+            let debounceTimer;
+            let selectedIndex = -1;
+            let suggestions = [];
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                selectedIndex = -1;
+
+                clearTimeout(debounceTimer);
+
+                if (query.length < 2) {
+                    suggestionsContainer.style.display = 'none';
+                    return;
+                }
+
+                // Recalculate position in case page has been resized
+                suggestionsContainer.style.width = inputGroup.offsetWidth + 'px';
+                suggestionsContainer.style.left = inputGroup.offsetLeft + 'px';
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/Search/Suggestions?query=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsContainer.innerHTML = '';
+                            suggestions = data;
+
+                            if (data.length > 0) {
+                                data.forEach((suggestion, index) => {
+                                    const div = document.createElement('div');
+                                    div.className = 'suggestion-item';
+                                    div.style.padding = '8px 12px';
+                                    div.style.cursor = 'pointer';
+                                    div.textContent = suggestion;
+                                    div.setAttribute('data-index', index);
+
+                                    div.addEventListener('mouseenter', function() {
+                                        this.style.backgroundColor = '#f0f0f0';
+                                        selectedIndex = parseInt(this.getAttribute('data-index'));
+                                    });
+
+                                    div.addEventListener('mouseleave', function() {
+                                        if (parseInt(this.getAttribute('data-index')) !== selectedIndex) {
+                                            this.style.backgroundColor = 'white';
+                                        }
+                                    });
+
+                                    div.addEventListener('click', function() {
+                                        searchInput.value = this.textContent;
+                                        suggestionsContainer.style.display = 'none';
+                                        // Submit the form automatically
+                                        form.submit();
+                                    });
+
+                                    suggestionsContainer.appendChild(div);
+                                });
+
+                                suggestionsContainer.style.display = 'block';
+                            } else {
+                                suggestionsContainer.style.display = 'none';
+                            }
+                        });
+                }, 300); // Debounce delay
+            });
+
+            // Add keyboard navigation
+            searchInput.addEventListener('keydown', function(e) {
+                const suggestionItems = suggestionsContainer.querySelectorAll('.suggestion-item');
+
+                // If suggestions are not displayed, do nothing
+                if (suggestionsContainer.style.display === 'none') return;
+
+                // Down arrow
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (selectedIndex < suggestionItems.length - 1) {
+                        if (selectedIndex >= 0) {
+                            suggestionItems[selectedIndex].style.backgroundColor = 'white';
+                        }
+                        selectedIndex++;
+                        suggestionItems[selectedIndex].style.backgroundColor = '#f0f0f0';
+                        ensureVisible(suggestionItems[selectedIndex], suggestionsContainer);
+                    }
+                }
+                // Up arrow
+                else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (selectedIndex > 0) {
+                        suggestionItems[selectedIndex].style.backgroundColor = 'white';
+                        selectedIndex--;
+                        suggestionItems[selectedIndex].style.backgroundColor = '#f0f0f0';
+                        ensureVisible(suggestionItems[selectedIndex], suggestionsContainer);
+                    }
+                }
+                // Enter key
+                else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    searchInput.value = suggestions[selectedIndex];
+                    suggestionsContainer.style.display = 'none';
+                    form.submit();
+                }
+                // Escape key
+                else if (e.key === 'Escape') {
+                    suggestionsContainer.style.display = 'none';
+                    selectedIndex = -1;
+                }
+            });
+
+            // Helper function to ensure selected item is visible in the scrollable container
+            function ensureVisible(element, container) {
+                const containerTop = container.scrollTop;
+                const containerBottom = containerTop + container.clientHeight;
+                const elementTop = element.offsetTop;
+                const elementBottom = elementTop + element.clientHeight;
+
+                if (elementTop < containerTop) {
+                    container.scrollTop = elementTop;
+                } else if (elementBottom > containerBottom) {
+                    container.scrollTop = elementBottom - container.clientHeight;
+                }
+            }
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.style.display = 'none';
+                    selectedIndex = -1;
+                }
+            });
+
+            // Adjust position on window resize
+            window.addEventListener('resize', function() {
+                if (suggestionsContainer.style.display !== 'none') {
+                    suggestionsContainer.style.width = inputGroup.offsetWidth + 'px';
+                    suggestionsContainer.style.left = inputGroup.offsetLeft + 'px';
+                }
+            });
+        });
+    </script>
+}
