@@ -116,5 +116,22 @@
     {
         <a asp-action="MyApplications" class="btn btn-secondary">Back to My Applications</a>
     }
+
+    @if (User.Identity != null && User.Identity.Name == Model.StudentName && Model.Status == StatusPrijave.UTOKU)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.PrijavaID" class="btn btn-primary">
+            <i class="bi bi-pencil"></i> Edit Application
+        </a>
+    }
+
+    @* Add this button for rejected applications *@
+    @if (User.Identity != null && User.Identity.Name == Model.StudentName && Model.Status == StatusPrijave.NEUSPJESNA)
+    {
+        <div class="mt-4 mb-4">
+            <a asp-action="Reapply" asp-route-id="@Model.PrijavaID" class="btn btn-warning">
+                <i class="bi bi-arrow-repeat"></i> Reapply
+            </a>
+        </div>
+    }
 </div>
 

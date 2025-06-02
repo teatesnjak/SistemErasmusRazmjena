@@ -1,19 +1,23 @@
 ﻿@model SistemErasmusRazmjena.Models.ViewModels.PrijavaEditViewModel
 
 @{
-    ViewData["Title"] = "Edit Application";
+    ViewData["Title"] = "Reapply";
 }
 
-<h1>Edit Application</h1>
+<h1>Reapply to Program</h1>
 
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
 
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Your previous application was rejected. You can modify your application and resubmit it.
+</div>
+
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit" method="post">
+        <form asp-action="Reapply" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PrijavaID" />
             <input type="hidden" asp-for="ErasmusProgramID" />
@@ -21,6 +25,7 @@
             <input type="hidden" asp-for="AkademskaGodina" />
             <input type="hidden" asp-for="Naziv" />
             <input type="hidden" asp-for="Semestar" />
+            <input type="hidden" asp-for="IsReapplication" value="true" />
 
             <div class="card mb-4">
                 <div class="card-header">
@@ -102,7 +107,7 @@
             </div>
 
             <div class="mt-4">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-primary">Submit Reapplication</button>
                 <a asp-action="Details" asp-route-id="@Model.PrijavaID" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
@@ -115,19 +120,16 @@
     }
     <script>
         $(document).ready(function () {
-            // Ensure the template is completely removed from the form
-            $('#subjectTemplate').remove();
-
             // Variable to track the current count of subjects
             var subjectCounter = $('.subject-row').length;
 
             // Add subject button
             $('#addSubjectBtn').click(function () {
-                // Clone the template from a string instead of using hidden div
+                // Clone the template from a string
                 var template = `
                     <div class="row mb-3 subject-row">
                         <input type="hidden" name="PrijedlogPredmeta[${subjectCounter}].PredmetID" value="0" />
-                        <input type="hidden" name="PrijedlogPredmeta[${subjectCounter}].Status" value="NACEKANJU" />
+                        <input type="hidden" name="PrijedlogPredmeta[${subjectCounter}].Status" value="0" />
                         <div class="col-md-5">
                             <label class="form-label">Home Subject</label>
                             <input type="text" class="form-control" name="PrijedlogPredmeta[${subjectCounter}].PredmetHome" required />
@@ -168,7 +170,7 @@
                 subjectCounter = $('.subject-row').length;
             });
 
-            // Fix form submission by adding client-side validation
+            // Form validation
             $('form').submit(function(e) {
                 var valid = true;
                 var atLeastOneSubject = $('.subject-row').length > 0;
@@ -198,5 +200,3 @@
         });
     </script>
 }
-
-
