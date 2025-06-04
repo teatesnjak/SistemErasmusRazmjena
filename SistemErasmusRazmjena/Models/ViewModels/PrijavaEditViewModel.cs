@@ -12,7 +12,7 @@ namespace SistemErasmusRazmjena.Models.ViewModels
         public string Naziv { get; set; }
         public string Semestar { get; set; }
         public DokumentacijaOptions DokumentacijaOptions { get; set; }
-        public List<Predmet> PrijedlogPredmeta { get; set; } = new List<Predmet>();
-        public bool IsReapplication { get; set; } = false;
+        public List<Predmet> PrijedlogPredmeta { get; set; }
+        public bool IsReapplication { get; set; }
     }
 }

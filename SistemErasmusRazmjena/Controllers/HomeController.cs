@@ -19,7 +19,9 @@ namespace SistemErasmusRazmjena.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var erasmusPrograms = await _context.ErasmusProgrami.ToListAsync();
+            var erasmusPrograms = await _context.ErasmusProgrami
+                .OrderByDescending(p => p.DateAdded)
+                .ToListAsync();
             return View(erasmusPrograms);
         }
 

@@ -13,6 +13,12 @@
                 <button type="submit" class="btn btn-link nav-link text-dark">Logout</button>
             </form>
         </li>
+        @if (User.IsInRole("Student"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="ErasmusProgram" asp-action="AvailablePrograms">Available Programs</a>
+            </li>
+        }
     </ul>
 }
 else

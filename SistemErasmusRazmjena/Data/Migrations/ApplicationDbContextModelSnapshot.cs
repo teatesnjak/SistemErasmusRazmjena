@@ -423,7 +423,8 @@ namespace SistemErasmusRazmjena.Data.Migrations
                     b.HasIndex("PrijedlogPredmetaID")
                         .IsUnique();
 
-                    b.HasIndex("StudentID");
+                    b.HasIndex("StudentID", "ErasmusProgramID")
+                        .IsUnique();
 
                     b.ToTable("Prijave");
                 });

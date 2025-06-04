@@ -4,26 +4,211 @@ using Microsoft.AspNetCore.Authorization;
 using SistemErasmusRazmjena.Data;
 using SistemErasmusRazmjena.Models;
 using System.Threading.Tasks;
+using System.Security.Claims;
+using SistemErasmusRazmjena.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace SistemErasmusRazmjena.Controllers
 {
     public class ErasmusProgramController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ErasmusProgramController(ApplicationDbContext context)
+        public ErasmusProgramController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ErasmusProgram
         public async Task<IActionResult> Index()
         {
-            var list = await _context.ErasmusProgrami
-                .OrderByDescending(p => p.DateAdded) // Sort by DateAdded in descending order
-                .ToListAsync();
-            return View(list);
+            // Sort by creation date, newest first
+            return View(await _context.ErasmusProgrami
+                .OrderByDescending(p => p.DateAdded)
+                .ToListAsync());
         }
+
+        // GET: ErasmusProgram/AvailablePrograms
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> AvailablePrograms()
+        {
+            // Get current user
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                return Challenge();
+            }
+
+            // Get all programs ordered by newest first
+            var programs = await _context.ErasmusProgrami
+                .OrderByDescending(p => p.DateAdded)
+                .ToListAsync();
+
+            // Get programs the student has already applied to
+            var appliedProgramIds = await _context.Prijave
+                .Where(p => p.StudentID == currentUser.Id)
+                .Select(p => p.ErasmusProgramID)
+                .ToListAsync();
+
+            // Create view models with application status
+            var viewModels = programs.Select(p => new ProgramViewModel
+            {
+                Program = p,
+                HasApplied = appliedProgramIds.Contains(p.ID)
+            }).ToList();
+
+            return View(viewModels);
+        }
+
+        // GET: ErasmusProgram/ApplicationDetails
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> ApplicationDetails(int programId)
+        {
+            // Get current user
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return Challenge();
+            }
+
+            // Get the student's application for this program
+            var application = await _context.Prijave
+                .Include(p => p.ErasmusProgram)
+                .Include(p => p.Dokumentacija)
+                .Include(p => p.PrijedlogPredmeta)
+                .ThenInclude(pp => pp.Rows)
+                .FirstOrDefaultAsync(p => p.StudentID == currentUser.Id && p.ErasmusProgramID == programId);
+
+            if (application == null)
+            {
+                TempData["ErrorMessage"] = "Application not found.";
+                return RedirectToAction(nameof(AvailablePrograms));
+            }
+
+            return View(application);
+        }
+
+
+        // POST: ErasmusProgram/Apply
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> Apply(int programId)
+        {
+            // Get current user
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return Challenge();
+            }
+
+            // IMPORTANT: Check for existing application BEFORE starting transaction
+            // This ensures we don't even start the process if an application exists
+            var existingApplication = await _context.Prijave
+                .AsNoTracking() // Use AsNoTracking for better performance on read-only query
+                .AnyAsync(p => p.StudentID == currentUser.Id && p.ErasmusProgramID == programId);
+
+            if (existingApplication)
+            {
+                TempData["ErrorMessage"] = "You have already applied to this program.";
+                return RedirectToAction(nameof(AvailablePrograms));
+            }
+
+            // Check if the program exists
+            var program = await _context.ErasmusProgrami.FindAsync(programId);
+            if (program == null)
+            {
+                return NotFound();
+            }
+
+            // Use a transaction to prevent race conditions
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Double-check for existing applications (in case one was created between our check and transaction)
+                existingApplication = await _context.Prijave
+                    .AsNoTracking()
+                    .AnyAsync(p => p.StudentID == currentUser.Id && p.ErasmusProgramID == programId);
+
+                if (existingApplication)
+                {
+                    TempData["ErrorMessage"] = "You have already applied to this program.";
+                    return RedirectToAction(nameof(AvailablePrograms));
+                }
+
+                // Create a new dokumentacija entry
+                var dokumentacija = new Dokumentacija
+                {
+                    CV = false,
+                    MotivacionoPismo = false,
+                    UgovorOUcenju = false
+                };
+                _context.Dokumentacije.Add(dokumentacija);
+                await _context.SaveChangesAsync();
+
+                // Create a new prijedlog predmeta entry
+                var prijedlogPredmeta = new PrijedlogPredmeta
+                {
+                    ErasmusProgramID = programId,
+                    VrijemeIzmjene = DateTime.Now
+                };
+                _context.PrijedloziPredmeta.Add(prijedlogPredmeta);
+                await _context.SaveChangesAsync();
+
+                // Create new application
+                var prijava = new Prijava
+                {
+                    StudentID = currentUser.Id,
+                    ErasmusProgramID = programId,
+                    DokumentacijaID = dokumentacija.ID,
+                    PrijedlogPredmetaID = prijedlogPredmeta.ID,
+                    Status = StatusPrijave.UTOKU,
+                    DateCreated = DateTime.Now
+                };
+
+                // Add the application to the database
+                _context.Prijave.Add(prijava);
+                await _context.SaveChangesAsync();
+
+                // Update the related entities with the new prijava ID
+                prijedlogPredmeta.PrijavaID = prijava.ID;
+                dokumentacija.PrijavaID = prijava.ID;
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                TempData["SuccessMessage"] = "Your application has been submitted successfully.";
+                return RedirectToAction(nameof(AvailablePrograms));
+            }
+            catch (DbUpdateException ex) when (IsDuplicateKeyException(ex))
+            {
+                // This specifically catches unique constraint violations
+                await transaction.RollbackAsync();
+                TempData["ErrorMessage"] = "You have already applied to this program.";
+                return RedirectToAction(nameof(AvailablePrograms));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["ErrorMessage"] = "An error occurred while submitting your application: " + ex.Message;
+                return RedirectToAction(nameof(AvailablePrograms));
+            }
+        }
+
+        // Helper method to determine if the exception is due to a duplicate key
+        private bool IsDuplicateKeyException(DbUpdateException ex)
+        {
+            return ex.InnerException?.Message?.Contains("duplicate key") == true ||
+                   ex.InnerException?.Message?.Contains("UNIQUE KEY") == true ||
+                   ex.InnerException?.Message?.Contains("IX_Prijave_StudentID_ErasmusProgramID") == true;
+        }
+
+
 
         // GET: ErasmusProgram/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -55,26 +240,19 @@ namespace SistemErasmusRazmjena.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Semestar,AkademskaGodina,Univerzitet,Opis,Name")] ErasmusProgram model)
+        public async Task<IActionResult> Create([Bind("ID,Univerzitet,AkademskaGodina,Semestar,Opis")] ErasmusProgram erasmusProgram)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                model.DateAdded = DateTime.UtcNow; // Automatically set the current date and time
-                _context.Add(model);
+                // Set creation date to current date/time
+                erasmusProgram.DateAdded = DateTime.Now;
+
+                _context.Add(erasmusProgram);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            // Log validation errors
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            {
-                Console.WriteLine(error.ErrorMessage);
-            }
-
-            _context.ErasmusProgrami.Add(model);
-       await _context.SaveChangesAsync();
-       return RedirectToAction(nameof(Index));
-   }
+            return View(erasmusProgram);
+        }
 
         // GET: ErasmusProgram/Edit/5
         [Authorize(Roles = "Admin")]
@@ -150,9 +328,6 @@ namespace SistemErasmusRazmjena.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-
-
         // GET: ErasmusProgram/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
@@ -208,6 +383,40 @@ namespace SistemErasmusRazmjena.Controllers
                 return NotFound();
 
             return Ok(program);
+        }
+   
+    // Add this method to your ErasmusProgramController
+[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CleanupDuplicateApplications()
+        {
+            // This is an admin-only method to clean up duplicate applications
+
+            // Find all duplicate applications (same student, same program)
+            var duplicates = await _context.Prijave
+                .GroupBy(p => new { p.StudentID, p.ErasmusProgramID })
+                .Where(g => g.Count() > 1)
+                .SelectMany(g => g.OrderBy(p => p.DateCreated).Skip(1)) // Keep the oldest one
+                .ToListAsync();
+
+            if (duplicates.Any())
+            {
+                foreach (var duplicate in duplicates)
+                {
+                    // Optional: log the duplicates being removed
+                    Console.WriteLine($"Removing duplicate application: ID={duplicate.ID}, StudentID={duplicate.StudentID}, ProgramID={duplicate.ErasmusProgramID}");
+
+                    _context.Prijave.Remove(duplicate);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Cleaned up {duplicates.Count} duplicate applications.";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "No duplicate applications found.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

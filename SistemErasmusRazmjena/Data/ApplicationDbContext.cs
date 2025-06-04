@@ -56,18 +56,18 @@ namespace SistemErasmusRazmjena.Data
                 .HasForeignKey(p => p.PrijedlogPredmetaID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Notifikacija - Korisnik
-            modelBuilder.Entity<Notifikacija>()
-                .HasOne(n => n.Korisnik)
-                .WithMany()
-                .HasForeignKey(n => n.KorisnikID)
-                .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<Notifikacija>()
                 .HasOne(n => n.Korisnik)
                 .WithMany()
                 .HasForeignKey(n => n.KorisnikID)
                 .HasPrincipalKey(u => u.Id);
+
+            // Add a unique constraint to prevent duplicate applications
+            modelBuilder.Entity<Prijava>()
+                .HasIndex(p => new { p.StudentID, p.ErasmusProgramID })
+                .IsUnique();
         }
 
     }

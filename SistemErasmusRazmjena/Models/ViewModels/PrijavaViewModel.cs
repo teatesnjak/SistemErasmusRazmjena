@@ -8,6 +8,7 @@ namespace SistemErasmusRazmjena.Models.ViewModels
         public bool CV { get; set; }
         public bool MotivacionoPismo { get; set; }
         public bool UgovorOUcenju { get; set; }
+
     }
 
     public class PrijavaViewModel
@@ -19,10 +20,14 @@ namespace SistemErasmusRazmjena.Models.ViewModels
         public required string AkademskaGodina { get; set; }
         public required string Naziv { get; set; }
         public required string Semestar { get; set; }
+        public string Univerzitet { get; set; } // Added this property
+
+        public required DateTime DateAdded { get; set; }
         public required string Opis { get; set; }
         public DokumentacijaOptionsViewModel DokumentacijaOptions { get; set; }
         public List<PredmetViewModel> Predmeti { get; set; }
         public StatusPrijave Status { get; set; }
+        public bool HasAlreadyApplied { get; set; }
     }
 
 

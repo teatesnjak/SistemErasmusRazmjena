@@ -33,7 +33,7 @@
         <dt class="col-sm-3">Status</dt>
         <dd class="col-sm-9">
             <span class="badge @(Model.Status == StatusPrijave.UTOKU ? "bg-warning" :
-                                                   Model.Status == StatusPrijave.USPJESNA ? "bg-success" : "bg-danger")">
+                                                                     Model.Status == StatusPrijave.USPJESNA ? "bg-success" : "bg-danger")">
                 @Model.Status
             </span>
         </dd>
@@ -97,41 +97,74 @@
         <tbody>
             @foreach (var predmet in Model.Predmeti)
             {
-                <tr>
+                <tr id="subject-@predmet.Id">
                     <td>@predmet.PredmetHome</td>
                     <td>@predmet.PredmetAccepting</td>
-                    <td>@predmet.Status</td>
+                    <td>
+                        <span class="badge @(predmet.Status == "ODOBRENO" ? "bg-success" :
+                                                                           predmet.Status == "ODBIJENO" ? "bg-danger" : "bg-warning")">
+                        @predmet.Status
+                    </span>
+                </td>
                 </tr>
             }
         </tbody>
     </table>
-</div>
 
-<div>
-    @if (User.IsInRole("Admin") || User.IsInRole("ECTSKoordinator"))
+    @if (User.IsInRole("ECTSKoordinator"))
     {
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    }
-    else
-    {
-        <a asp-action="MyApplications" class="btn btn-secondary">Back to My Applications</a>
-    }
-
-    @if (User.Identity != null && User.Identity.Name == Model.StudentName && Model.Status == StatusPrijave.UTOKU)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.PrijavaID" class="btn btn-primary">
-            <i class="bi bi-pencil"></i> Edit Application
+        <a asp-action="ManageSubjects" asp-route-id="@Model.PrijavaID" class="btn btn-primary">
+            <i class="bi bi-pencil-square"></i> Manage Subjects
         </a>
     }
-
-    @* Add this button for rejected applications *@
-    @if (User.Identity != null && User.Identity.Name == Model.StudentName && Model.Status == StatusPrijave.NEUSPJESNA)
-    {
-        <div class="mt-4 mb-4">
-            <a asp-action="Reapply" asp-route-id="@Model.PrijavaID" class="btn btn-warning">
-                <i class="bi bi-arrow-repeat"></i> Reapply
-            </a>
-        </div>
-    }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#subjects-table').on('click', '.status-btn', function() {
+                var button = $(this);
+                var predmetId = button.data('predmet-id');
+                var status = button.data('status');
+                var row = $('#subject-' + predmetId);
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("UpdateSubjectStatus", "Prijava")',
+                    data: { predmetId: predmetId, status: status },
+                    success: function () {
+                        $('.alert-success').remove();
+                        $('body').prepend('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                            'Subject status successfully updated.' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                            '</div>');
+
+                        var statusBadge = row.find('.status-badge');
+                        statusBadge.removeClass('bg-success bg-danger bg-warning');
+
+                        var actionCell = row.find('.action-cell');
+                        if (status === 'ODOBRENO') {
+                            statusBadge.addClass('bg-success').text('ODOBRENO');
+                            actionCell.html(
+                                '<button type="button" class="btn btn-sm btn-outline-danger status-btn" ' +
+                                'data-predmet-id="' + predmetId + '" data-status="ODBIJENO">' +
+                                'Change to Rejected</button>'
+                            );
+                        } else if (status === 'ODBIJENO') {
+                            statusBadge.addClass('bg-danger').text('ODBIJENO');
+                            actionCell.html(
+                                '<button type="button" class="btn btn-sm btn-outline-success status-btn" ' +
+                                'data-predmet-id="' + predmetId + '" data-status="ODOBRENO">' +
+                                'Change to Approved</button>'
+                            );
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while updating the subject status.');
+                    }
+                });
+            });
+        });
+    </script>
+}
 

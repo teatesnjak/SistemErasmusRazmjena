@@ -1,51 +1,102 @@
 ﻿@model SistemErasmusRazmjena.Models.ErasmusProgram
-
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+@using SistemErasmusRazmjena.Models
+@inject UserManager<ApplicationUser> UserManager
+@inject SistemErasmusRazmjena.Data.ApplicationDbContext Context
 @{
     ViewData["Title"] = "Program Details";
+
+    // Check if current user is a student
+    var isStudent = User.IsInRole("Student");
+
+    // Check if the student has already applied for this program
+    var hasApplied = false;
+    if (isStudent)
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+        if (currentUser != null)
+        {
+            hasApplied = await Context.Prijave
+                .AsQueryable()
+                .AnyAsync(p => p.StudentID == currentUser.Id && p.ErasmusProgramID == Model.ID);
+        }
+    }
 }
 
-<div class="container erasmus-program-details">
-    <h1 class="mb-4">Program Details</h1>
-    
-    <div class="card shadow">
+<div class="container mt-4">
+    <h2>Program Details</h2>
+
+    <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">@Model.Univerzitet</h4>
+            <h3 class="mb-0">@Model.Univerzitet</h3>
         </div>
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Semestar)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Semestar)</dd>
-                
-                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.AkademskaGodina)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.AkademskaGodina)</dd>
-                
-                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Univerzitet)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Univerzitet)</dd>
-                
-                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Opis)</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Opis)</dd>
-            </dl>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Academic Year:</strong>
+                </div>
+                <div class="col-md-8">
+                    @Model.AkademskaGodina
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Semester:</strong>
+                </div>
+                <div class="col-md-8">
+                    @(Model.Semestar == 1 ? "Winter" : "Summer")
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Date Added:</strong>
+                </div>
+                <div class="col-md-8">
+                    @Model.DateAdded.ToString("dd MMM yyyy")
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Description:</strong>
+                </div>
+                <div class="col-md-8">
+                    @Model.Opis
+                </div>
+            </div>
         </div>
         <div class="card-footer">
-            <div class="action-links">
-                @if (User.IsInRole("Admin"))
+            @if (isStudent)
+            {
+                if (hasApplied)
                 {
-                    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-outline-primary me-2">
-                        <i class="bi bi-pencil-square me-1"></i>Edit
-                    </a>
+                    <div class="alert alert-success mb-3">
+                        <i class="bi bi-check-circle-fill me-2"></i> You have already applied to this program
+                    </div>
+                    <div class="d-flex">
+                        <a asp-controller="Prijava" asp-action="Details" asp-route-id="@Model.ID" class="btn btn-success me-2">
+                            View Application
+                        </a>
+
+
+                        <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Back to Programs</a>
+                    </div>
                 }
-                
-                @if (User.IsInRole("Student"))
+                else
                 {
-                    <a asp-controller="Prijava" asp-action="Create" asp-route-programId="@Model?.ID" class="btn btn-success me-2">
-                        <i class="bi bi-check-circle me-1"></i>Apply for Program
-                    </a>
+                    <div class="d-flex">
+                        <a asp-controller="Prijava" asp-action="Create" asp-route-programId="@Model.ID" class="btn btn-primary me-2">
+                            Apply for Program
+                        </a>
+                        <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Back to Programs</a>
+                    </div>
                 }
-                
-                <a asp-action="Index" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Back to List
-                </a>
-            </div>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            }
         </div>
     </div>
 </div>
+

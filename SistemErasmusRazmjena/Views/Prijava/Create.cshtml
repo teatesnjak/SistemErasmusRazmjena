@@ -6,63 +6,85 @@
 
 <h2>Nova prijava</h2>
 
-<form asp-action="Create" method="post">
-    @* Hidden polja – OBAVEZNO *@
-    <input type="hidden" asp-for="ErasmusProgramID" />
-    <input type="hidden" asp-for="StudentID" />
-    <input type="hidden" asp-for="Status" />
+
+<form asp-action="Create" asp-controller="Prijava" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="ErasmusProgramID" value="@Model.ErasmusProgramID" />
+    <input type="hidden" asp-for="Naziv" />
+    <input type="hidden" asp-for="AkademskaGodina" />
+    <input type="hidden" asp-for="Semestar" />
+    <input type="hidden" asp-for="Opis" />
+    <input type="hidden" asp-for="Univerzitet" />
+    <input type="hidden" asp-for="DateAdded" />
+
+    <h2>Create Application for Erasmus Program</h2>
 
     <div>
-        <h3>Erasmus Program Details</h3>
-        <p><strong>Akademska godina:</strong> @Model.AkademskaGodina</p>
-        <p><strong>Naziv:</strong> @Model.Naziv</p>
-        <p><strong>Semestar:</strong> @Model.Semestar</p>
-        <p><strong>Opis:</strong> @Model.Opis</p>
+        <h3>Program Details</h3>
+        <p><strong>University:</strong> @Model.Univerzitet</p>
+        <p><strong>Academic Year:</strong> @Model.AkademskaGodina</p>
+        <p><strong>Semester:</strong> @Model.Semestar</p>
+        <p><strong>Description:</strong> @Model.Opis</p>
+        <p><strong>Date Added:</strong> @Model.DateAdded.ToString("MM/dd/yyyy")</p>
     </div>
 
-    <div>
-        <h3>Documentation</h3>
-        <label>
-            <input type="checkbox" asp-for="DokumentacijaOptions.CV" /> CV
-        </label>
-        <label>
-            <input type="checkbox" asp-for="DokumentacijaOptions.MotivacionoPismo" /> Motivational Letter
-        </label>
-        <label>
-            <input type="checkbox" asp-for="DokumentacijaOptions.UgovorOUcenju" /> Learning Agreement
-        </label>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Documentation</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.CV" id="cvCheck" />
+                <label class="form-check-label" for="cvCheck">CV</label>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.MotivacionoPismo" id="motivationalCheck" />
+                <label class="form-check-label" for="motivationalCheck">Motivational Letter</label>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.UgovorOUcenju" id="learningCheck" />
+                <label class="form-check-label" for="learningCheck">Learning Agreement</label>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <h3>Subjects</h3>
-        <table id="subjectsTable" class="table">
-            <thead>
-                <tr>
-                    <th>Home University Subject</th>
-                    <th>Accepting University Subject</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="subjectRows">
-                <tr class="subject-row">
-                    <td>
-                        <input type="text" name="PrijedlogPredmeta[0].PredmetHome" class="form-control" required />
-                    </td>
-                    <td>
-                        <input type="text" name="PrijedlogPredmeta[0].PredmetAccepting" class="form-control" required />
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger remove-row">Remove</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <button type="button" id="addSubjectRow" class="btn btn-primary">Add Subject</button>
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Subjects</h3>
+            <button type="button" id="addSubjectRow" class="btn btn-sm btn-primary">Add Subject</button>
+        </div>
+        <div class="card-body">
+            <table id="subjectsTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Home University Subject</th>
+                        <th>Accepting University Subject</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="subjectRows">
+                    <tr class="subject-row">
+                        <td>
+                            <input type="text" name="PrijedlogPredmeta[0].PredmetHome" class="form-control" required />
+                        </td>
+                        <td>
+                            <input type="text" name="PrijedlogPredmeta[0].PredmetAccepting" class="form-control" required />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+                            <input type="hidden" name="PrijedlogPredmeta[0].Status" value="0" />
+                            <input type="hidden" name="PrijedlogPredmeta[0].PredmetID" value="0" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="card-body mt-4">
-        <div class="d-grid gap">
-            <button type="submit" class="btn btn-success">Submit</button>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Submit Application</button>
+            <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Cancel</a>
         </div>
     </div>
 </form>
@@ -70,6 +92,10 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            // Display initial form values in console
+            console.log("Initial ErasmusProgramID: ", "@Model.ErasmusProgramID");
+            console.log("Initial StudentID: ", "@Model.StudentID");
+
             // Handle adding new row
             $("#addSubjectRow").click(function() {
                 let rowCount = $("#subjectRows .subject-row").length;
@@ -82,7 +108,9 @@
                             <input type="text" name="PrijedlogPredmeta[${rowCount}].PredmetAccepting" class="form-control" required />
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger remove-row">Remove</button>
+                            <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+                            <input type="hidden" name="PrijedlogPredmeta[${rowCount}].Status" value="0" />
+                            <input type="hidden" name="PrijedlogPredmeta[${rowCount}].PredmetID" value="0" />
                         </td>
                     </tr>
                 `;
@@ -111,6 +139,10 @@
 
             // Validate form on submit
             $("form").on("submit", function(e) {
+                // Before form submission, double-check the ID is still present
+                console.log("Form submitting...");
+                console.log("ErasmusProgramID value: ", $("input[name='ErasmusProgramID']").val());
+
                 let isValid = true;
 
                 // Check if any subject rows are empty
@@ -127,11 +159,13 @@
                 });
 
                 if (!isValid) {
+                    console.log("Form validation failed");
                     e.preventDefault();
                     alert("Please fill in both home and accepting university subjects for all rows.");
+                } else {
+                    console.log("Form validation passed, submitting...");
                 }
             });
         });
     </script>
 }
-

@@ -28,38 +28,10 @@
         <dd class="col-sm-9">@Model.Semestar</dd>
     </dl>
 
-    <h4>Documentation</h4>
-    <div class="card mb-4">
-        <div class="card-body">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    CV
-                    <span class="badge @(Model.DokumentacijaOptions.CV ? "bg-success" : "bg-danger") rounded-pill">
-                        @(Model.DokumentacijaOptions.CV ? "Submitted" : "Not Submitted")
-                    </span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Motivation Letter
-                    <span class="badge @(Model.DokumentacijaOptions.MotivacionoPismo ? "bg-success" : "bg-danger") rounded-pill">
-                        @(Model.DokumentacijaOptions.MotivacionoPismo ? "Submitted" : "Not Submitted")
-                    </span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Learning Agreement
-                    <span class="badge @(Model.DokumentacijaOptions.UgovorOUcenju ? "bg-success" : "bg-danger") rounded-pill">
-                        @(Model.DokumentacijaOptions.UgovorOUcenju ? "Submitted" : "Not Submitted")
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </div>
-
     <h4>Proposed Subjects</h4>
-    <p class="mb-3">As ECTS Coordinator, you need to review each subject the student has proposed.</p>
-
     <div class="table-responsive">
-        <table class="table table-striped" id="subjects-table">
-            <thead class="table-dark">
+        <table class="table table-striped">
+            <thead>
                 <tr>
                     <th>Home Subject</th>
                     <th>Accepting Subject</th>
@@ -70,99 +42,55 @@
             <tbody>
                 @foreach (var predmet in Model.Predmeti)
                 {
-                    <tr id="subject-@predmet.Id">
+                    <tr>
                         <td>@predmet.PredmetHome</td>
                         <td>@predmet.PredmetAccepting</td>
+                        <td>@predmet.Status</td>
                         <td>
-                            <span class="badge status-badge @(predmet.Status == "ODOBRENO" ? "bg-success" :
-                                                                                  predmet.Status == "ODBIJENO" ? "bg-danger" : "bg-warning")">
-                            @predmet.Status
-                        </span>
-                    </td>
-                    <td class="action-cell">
-                        @if (predmet.Status == "NACEKANJU")
-                            {
-                                <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-sm btn-success status-btn"
-                                            data-predmet-id="@predmet.Id" data-status="ODOBRENO">
-                                        <i class="bi bi-check-lg"></i> Approve
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-danger status-btn"
-                                            data-predmet-id="@predmet.Id" data-status="ODBIJENO">
-                                        <i class="bi bi-x-lg"></i> Reject
-                                    </button>
-                                </div>
-                            }
-                            else
-                            {
-                                @if (predmet.Status == "ODOBRENO")
-                                {
-                                    <button type="button" class="btn btn-sm btn-outline-danger status-btn"
-                                            data-predmet-id="@predmet.Id" data-status="ODBIJENO">
-                                        Change to Rejected
-                                    </button>
-                                }
-                                else if (predmet.Status == "ODBIJENO")
-                                {
-                                    <button type="button" class="btn btn-sm btn-outline-success status-btn"
-                                            data-predmet-id="@predmet.Id" data-status="ODOBRENO">
-                                        Change to Approved
-                                    </button>
-                                }
-                            }
+                            <form asp-action="UpdateSubjectStatus" asp-controller="Prijava" method="post">
+                                <input type="hidden" name="predmetId" value="@predmet.Id" />
+                                <select name="status" class="form-control">
+                                    <option value="NACEKANJU" selected="@((predmet.Status == "NACEKANJU").ToString())">Pending</option>
+                                    <option value="ODOBRENO" selected="@((predmet.Status == "ODOBRENO").ToString())">Approved</option>
+                                    <option value="ODBIJENO" selected="@((predmet.Status == "ODBIJENO").ToString())">Rejected</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary mt-2">Update</button>
+                            </form>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
-
-    <div class="mt-4">
-        <p>
-            <strong>Note:</strong> Once you've reviewed all subjects, the student will be able to see your decisions.
-            You can change your decision on any subject if needed.
-        </p>
-    </div>
 </div>
 
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back to Applications List
-    </a>
-</div>
+<a asp-action="Index" class="btn btn-secondary">Back to Applications</a>
+
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Using event delegation for handling button clicks
             $('#subjects-table').on('click', '.status-btn', function() {
                 var button = $(this);
                 var predmetId = button.data('predmet-id');
                 var status = button.data('status');
                 var row = $('#subject-' + predmetId);
 
-                // Send AJAX request
                 $.ajax({
                     type: "POST",
-                    url: '@Url.Action("UpdateSubjectStatus")',
+                    url: '@Url.Action("UpdateSubjectStatus", "Prijava")',
                     data: { predmetId: predmetId, status: status },
-                    success: function (data) {
-                        // Remove any existing success messages
+                    success: function () {
                         $('.alert-success').remove();
-
-                        // Show success message
                         $('body').prepend('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                            'Status predmeta je uspješno ažuriran.' +
+                            'Subject status successfully updated.' +
                             '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
                             '</div>');
 
-                        // Update status badge
                         var statusBadge = row.find('.status-badge');
                         statusBadge.removeClass('bg-success bg-danger bg-warning');
 
-                        // Update action cell
                         var actionCell = row.find('.action-cell');
-
                         if (status === 'ODOBRENO') {
                             statusBadge.addClass('bg-success').text('ODOBRENO');
                             actionCell.html(
@@ -187,4 +115,5 @@
         });
     </script>
 }
+
 
