@@ -1,119 +1,238 @@
-@model SistemErasmusRazmjena.Models.ViewModels.PrijavaViewModel
+﻿@model SistemErasmusRazmjena.Models.ViewModels.PrijavaViewModel
 
 @{
     ViewData["Title"] = "Manage Subjects";
 }
 
-<h1>Manage Application Subjects</h1>
+<h1>Upravljaj predmetima prijave</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["InfoMessage"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        @TempData["InfoMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+
 <div>
-    <h4>Application Details</h4>
+    <h4>Detalji prijave</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-3">Student</dt>
         <dd class="col-sm-9">@Model.StudentName</dd>
 
-        <dt class="col-sm-3">Academic Year</dt>
+        <dt class="col-sm-3">Akademska godina</dt>
         <dd class="col-sm-9">@Model.AkademskaGodina</dd>
 
-        <dt class="col-sm-3">University</dt>
+        <dt class="col-sm-3">Univerzitet</dt>
         <dd class="col-sm-9">@Model.Naziv</dd>
 
-        <dt class="col-sm-3">Semester</dt>
+        <dt class="col-sm-3">Semestar</dt>
         <dd class="col-sm-9">@Model.Semestar</dd>
     </dl>
 
-    <h4>Proposed Subjects</h4>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Home Subject</th>
-                    <th>Accepting Subject</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var predmet in Model.Predmeti)
-                {
+    <h4>Predloženi predmeti</h4>
+
+    <form id="manage-subjects-form" asp-action="UpdateAllSubjectStatuses" asp-controller="Prijava" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="prijavaId" value="@Model.PrijavaID" />
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="subjects-table">
+                <thead class="table-dark">
                     <tr>
-                        <td>@predmet.PredmetHome</td>
-                        <td>@predmet.PredmetAccepting</td>
-                        <td>@predmet.Status</td>
-                        <td>
-                            <form asp-action="UpdateSubjectStatus" asp-controller="Prijava" method="post">
-                                <input type="hidden" name="predmetId" value="@predmet.Id" />
-                                <select name="status" class="form-control">
-                                    <option value="NACEKANJU" selected="@((predmet.Status == "NACEKANJU").ToString())">Pending</option>
-                                    <option value="ODOBRENO" selected="@((predmet.Status == "ODOBRENO").ToString())">Approved</option>
-                                    <option value="ODBIJENO" selected="@((predmet.Status == "ODBIJENO").ToString())">Rejected</option>
-                                </select>
-                                <button type="submit" class="btn btn-primary mt-2">Update</button>
-                            </form>
+                        <th>Predmeti matičnog univerziteta</th>
+                        <th>Predmeti stranog univerziteta</th>
+                        <th>Status (kliknite za promjenu)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Predmeti.Count; i++)
+                    {
+                        <tr id="subject-@Model.Predmeti[i].Id" data-predmet-id="@Model.Predmeti[i].Id" data-index="@i">
+                            <td class="align-middle">
+                                <strong>@Model.Predmeti[i].PredmetHome</strong>
+                            </td>
+                            <td class="align-middle">
+                                <strong>@Model.Predmeti[i].PredmetAccepting</strong>
+                            </td>
+                            <td class="align-middle">
+                                <!-- Hidden inputs for form submission -->
+                                <input type="hidden" name="subjects[@i].Id" value="@Model.Predmeti[i].Id" />
+                                <input type="hidden" name="subjects[@i].Status" value="@Model.Predmeti[i].Status" class="status-input" />
+
+                                <span class="badge status-badge clickable-status
+                                            @(Model.Predmeti[i].Status == "ODOBRENO" ? "bg-success" :
+                                                                                                                  Model.Predmeti[i].Status == "ODBIJENO" ? "bg-danger" : "bg-warning")"
+                                                                                                                                                                                      data-predmet-id="@Model.Predmeti[i].Id"
+                                                                                                                                                                                      style="cursor: pointer; user-select: none; font-size: 0.9em; padding: 8px 12px;">
+                                    @(Model.Predmeti[i].Status == "NACEKANJU" ? "PENDING" :
+                                                                    Model.Predmeti[i].Status == "ODOBRENO" ? "APPROVED" : "REJECTED")
+                            </span>
                         </td>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                                        }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+            <div>
+                <button type="submit" class="btn btn-primary btn-lg" id="save-changes-btn" disabled>
+                    <i class="fas fa-save"></i> Sačuvaj promjene
+                </button>
+                <small class="text-muted ms-2" id="changes-indicator" style="display: none;">
+                    <i class="fas fa-info-circle"></i> Imate nesačuvanih promjena
+                </small>
+            </div>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Nazad na listu
+            </a>
+        </div>
+    </form>
 </div>
 
-<a asp-action="Index" class="btn btn-secondary">Back to Applications</a>
+<script>
 
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#subjects-table').on('click', '.status-btn', function() {
-                var button = $(this);
-                var predmetId = button.data('predmet-id');
-                var status = button.data('status');
-                var row = $('#subject-' + predmetId);
+    // Simple vanilla JavaScript version
+    document.addEventListener('DOMContentLoaded', function() {
 
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("UpdateSubjectStatus", "Prijava")',
-                    data: { predmetId: predmetId, status: status },
-                    success: function () {
-                        $('.alert-success').remove();
-                        $('body').prepend('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                            'Subject status successfully updated.' +
-                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-                            '</div>');
+        let hasChanges = false;
+        const originalStatuses = {};
 
-                        var statusBadge = row.find('.status-badge');
-                        statusBadge.removeClass('bg-success bg-danger bg-warning');
+        // Status cycle order: PENDING -> APPROVED -> REJECTED -> PENDING
+        const statusCycle = ['NACEKANJU', 'ODOBRENO', 'ODBIJENO'];
+        const statusDisplay = {
+            'NACEKANJU': 'PENDING',
+            'ODOBRENO': 'APPROVED',
+            'ODBIJENO': 'REJECTED'
+        };
+        const statusClasses = {
+            'NACEKANJU': 'bg-warning',
+            'ODOBRENO': 'bg-success',
+            'ODBIJENO': 'bg-danger'
+        };
 
-                        var actionCell = row.find('.action-cell');
-                        if (status === 'ODOBRENO') {
-                            statusBadge.addClass('bg-success').text('ODOBRENO');
-                            actionCell.html(
-                                '<button type="button" class="btn btn-sm btn-outline-danger status-btn" ' +
-                                'data-predmet-id="' + predmetId + '" data-status="ODBIJENO">' +
-                                'Change to Rejected</button>'
-                            );
-                        } else if (status === 'ODBIJENO') {
-                            statusBadge.addClass('bg-danger').text('ODBIJENO');
-                            actionCell.html(
-                                '<button type="button" class="btn btn-sm btn-outline-success status-btn" ' +
-                                'data-predmet-id="' + predmetId + '" data-status="ODOBRENO">' +
-                                'Change to Approved</button>'
-                            );
-                        }
-                    },
-                    error: function () {
-                        alert('An error occurred while updating the subject status.');
-                    }
-                });
+        // Store original statuses
+        const statusInputs = document.querySelectorAll('.status-input');
+
+        statusInputs.forEach(function(input, index) {
+            const row = input.closest('tr');
+            const predmetId = row.getAttribute('data-predmet-id');
+            const status = input.value;
+            originalStatuses[predmetId] = status;
+        });
+
+        // Handle status badge clicks
+        const statusBadges = document.querySelectorAll('.clickable-status');
+
+        statusBadges.forEach(function(badge, index) {
+
+            // Add hover effect
+            badge.addEventListener('mouseenter', function() {
+                badge.style.opacity = '0.8';
+                badge.style.transform = 'scale(1.05)';
+                badge.style.transition = 'all 0.2s ease';
+            });
+
+            badge.addEventListener('mouseleave', function() {
+                badge.style.opacity = '1';
+                badge.style.transform = 'scale(1)';
+            });
+
+            badge.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const predmetId = badge.getAttribute('data-predmet-id');
+                const row = badge.closest('tr');
+                const statusInput = row.querySelector('.status-input');
+
+                if (!statusInput) {
+                    return;
+                }
+
+                const currentStatus = statusInput.value;
+                const currentIndex = statusCycle.indexOf(currentStatus);
+                const nextIndex = (currentIndex + 1) % statusCycle.length;
+                const newStatus = statusCycle[nextIndex];
+
+                // Update hidden input
+                statusInput.value = newStatus;
+
+                // Update status badge
+                updateStatusBadge(badge, newStatus);
+
+                // Check for changes
+                checkForChanges();
             });
         });
-    </script>
-}
 
+        function updateStatusBadge(statusBadge, newStatus) {
+            // Remove existing status classes
+            statusBadge.className = statusBadge.className.replace(/bg-(success|danger|warning)/g, '');
 
+            const badgeText = statusDisplay[newStatus];
+            const badgeClass = statusClasses[newStatus];
+
+            statusBadge.className += ' ' + badgeClass;
+            statusBadge.textContent = badgeText;
+        }
+
+        function checkForChanges() {
+            hasChanges = false;
+            let changedCount = 0;
+
+            statusInputs.forEach(function(input) {
+                const row = input.closest('tr');
+                const predmetId = row.getAttribute('data-predmet-id');
+                const currentStatus = input.value;
+                if (originalStatuses[predmetId] !== currentStatus) {
+                    hasChanges = true;
+                    changedCount++;
+                }
+            });
+
+            const saveBtn = document.getElementById('save-changes-btn');
+            const changesIndicator = document.getElementById('changes-indicator');
+
+            if (saveBtn) {
+                saveBtn.disabled = !hasChanges;
+            }
+
+            if (changesIndicator) {
+                changesIndicator.style.display = hasChanges ? 'inline' : 'none';
+            }
+        }
+
+        // Handle form submission
+        const form = document.getElementById('manage-subjects-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (!hasChanges) {
+                    e.preventDefault();
+                    alert('No changes to save.');
+                    return false;
+                }
+            });
+        }
+    });
+</script>

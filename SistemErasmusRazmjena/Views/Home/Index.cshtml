@@ -1,30 +1,30 @@
 ﻿@model List<SistemErasmusRazmjena.Models.ErasmusProgram>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Početna stranica";
 }
 
-<!-- Hero section with prominent login/register buttons -->
+<!-- Hero sekcija sa istaknutim login/registracija dugmićima -->
 <div class="py-5 bg-primary text-white rounded-3 mb-4">
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-md-@(User?.Identity?.IsAuthenticated == true ? "12" : "8")">
-                <h1 class="display-4 fw-bold">Erasmus Exchange Programs</h1>
-                <p class="lead">Explore international study opportunities and expand your academic horizons</p>
+                <h1 class="display-4 fw-bold">Erasmus Programi Razmjene</h1>
+                <p class="lead">Istraži međunarodne prilike za studij i proširi svoje akademske vidike</p>
             </div>
             @if (User?.Identity?.IsAuthenticated != true)
             {
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <a href="/Account/Login" class="btn btn-light btn-lg me-2">Login</a>
-                    <a href="/Account/Register" class="btn btn-outline-light btn-lg">Register</a>
+                    <a href="/Account/Login" class="btn btn-light btn-lg me-2">Prijava</a>
+                    <a href="/Account/Register" class="btn btn-outline-light btn-lg">Registracija</a>
                 </div>
             }
         </div>
     </div>
 </div>
 
-<!-- Featured Programs section -->
+<!-- Sekcija sa dostupnim programima -->
 <div class="container my-5">
-    <h2 class="text-center mb-4">Available Erasmus Programs</h2>
+    <h2 class="text-center mb-4">Dostupni Erasmus Programi</h2>
     
     @if (Model != null && Model.Any())
     {
@@ -36,12 +36,12 @@
                         <div class="card-body">
                             <h5 class="card-title">@program.Univerzitet</h5>
                             <h6 class="card-subtitle mb-2 text-muted">
-                                Semester: @program.Semestar | Academic Year: @program.AkademskaGodina
+                                Semestar: @program.Semestar | Akademska godina: @program.AkademskaGodina
                             </h6>
                             <p class="card-text">@program.Opis</p>
                         </div>
                         <div class="card-footer bg-transparent border-0">
-                            <a href="/ErasmusProgram/Details/@program.ID" class="btn btn-outline-primary">View Details</a>
+                            <a href="/ErasmusProgram/Details/@program.ID" class="btn btn-outline-primary">Detalji programa</a>
                         </div>
                     </div>
                 </div>
@@ -51,27 +51,27 @@
     else
     {
         <div class="alert alert-info text-center">
-            <p class="mb-0">No Erasmus programs are currently available. Please check back later.</p>
+            <p class="mb-0">Trenutno nema dostupnih Erasmus programa. Molimo provjerite kasnije.</p>
         </div>
         
-        <!-- Sample placeholder cards for demonstration -->
+        <!-- Primjeri kartica kao privremeni prikaz -->
         <div class="row row-cols-1 row-cols-md-3 g-4">
             @for (int i = 0; i < 3; i++)
             {
                 <div class="col">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">Example University @(i+1)</h5>
+                            <h5 class="card-title">Primjer Univerziteta @(i+1)</h5>
                             <h6 class="card-subtitle mb-2 text-muted">
-                                Semester: @(i % 2 + 1) | Academic Year: 2025/2026
+                                Semestar: @(i % 2 + 1) | Akademska godina: 2025/2026
                             </h6>
                             <p class="card-text">
-                                Study abroad at this prestigious institution and experience a diverse academic environment
-                                with cutting-edge research opportunities and cultural exchange.
+                                Studiraj u ovom prestižnom univerzitetu i doživi raznoliko akademsko okruženje
+                                sa savremenim istraživačkim mogućnostima i kulturnom razmjenom.
                             </p>
                         </div>
                         <div class="card-footer bg-transparent border-0">
-                            <button class="btn btn-outline-secondary" disabled>Coming Soon</button>
+                            <button class="btn btn-outline-secondary" disabled>Uskoro dostupno</button>
                         </div>
                     </div>
                 </div>
@@ -80,30 +80,30 @@
     }
 </div>
 
-<!-- Benefits section remains the same -->
+<!-- Sekcija benefita -->
 <div class="bg-light py-5">
     <div class="container">
-        <h2 class="text-center mb-4">Why Choose Erasmus?</h2>
+        <h2 class="text-center mb-4">Zašto odabrati Erasmus?</h2>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="text-center">
                     <i class="bi bi-globe" style="font-size: 2.5rem; color: #0d6efd;"></i>
-                    <h4 class="mt-3">Global Perspective</h4>
-                    <p>Experience new cultures and expand your worldview through international study.</p>
+                    <h4 class="mt-3">Globalna perspektiva</h4>
+                    <p>Doživi nove kulture i proširi svoje poglede kroz međunarodni studij.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="text-center">
                     <i class="bi bi-book" style="font-size: 2.5rem; color: #0d6efd;"></i>
-                    <h4 class="mt-3">Academic Excellence</h4>
-                    <p>Learn from leading professors and access resources at top universities.</p>
+                    <h4 class="mt-3">Akademska izvrsnost</h4>
+                    <p>Uči od vodećih profesora i pristupi resursima vrhunskih univerziteta.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="text-center">
                     <i class="bi bi-briefcase" style="font-size: 2.5rem; color: #0d6efd;"></i>
-                    <h4 class="mt-3">Career Advancement</h4>
-                    <p>Enhance your resume with international experience valued by employers.</p>
+                    <h4 class="mt-3">Napredak u karijeri</h4>
+                    <p>Obogati svoj CV međunarodnim iskustvom koje poslodavci visoko cijene.</p>
                 </div>
             </div>
         </div>

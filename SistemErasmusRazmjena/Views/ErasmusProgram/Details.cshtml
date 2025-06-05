@@ -25,7 +25,7 @@
 }
 
 <div class="container mt-4">
-    <h2>Program Details</h2>
+    <h2>Detalji programa</h2>
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
@@ -34,7 +34,7 @@
         <div class="card-body">
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <strong>Academic Year:</strong>
+                    <strong>Akademska godina:</strong>
                 </div>
                 <div class="col-md-8">
                     @Model.AkademskaGodina
@@ -42,15 +42,15 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <strong>Semester:</strong>
+                    <strong>Semestar:</strong>
                 </div>
                 <div class="col-md-8">
-                    @(Model.Semestar == 1 ? "Winter" : "Summer")
+                    @(Model.Semestar == 1 ? "Zimski" : "Ljetni")
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <strong>Date Added:</strong>
+                    <strong>Datum dodavanja programa:</strong>
                 </div>
                 <div class="col-md-8">
                     @Model.DateAdded.ToString("dd MMM yyyy")
@@ -58,7 +58,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <strong>Description:</strong>
+                    <strong>Opis:</strong>
                 </div>
                 <div class="col-md-8">
                     @Model.Opis
@@ -71,30 +71,25 @@
                 if (hasApplied)
                 {
                     <div class="alert alert-success mb-3">
-                        <i class="bi bi-check-circle-fill me-2"></i> You have already applied to this program
+                        <i class="bi bi-check-circle-fill me-2"></i> Već ste prijavljeni na ovaj program
                     </div>
                     <div class="d-flex">
-                        <a asp-controller="Prijava" asp-action="Details" asp-route-id="@Model.ID" class="btn btn-success me-2">
-                            View Application
-                        </a>
-
-
-                        <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Back to Programs</a>
+                        <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Nazad na programe</a>
                     </div>
                 }
                 else
                 {
                     <div class="d-flex">
                         <a asp-controller="Prijava" asp-action="Create" asp-route-programId="@Model.ID" class="btn btn-primary me-2">
-                            Apply for Program
+                            Prijavi se
                         </a>
-                        <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Back to Programs</a>
+                        <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Nazad na programe</a>
                     </div>
                 }
             }
             else
             {
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
             }
         </div>
     </div>

@@ -9,27 +9,27 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0"><i class="bi bi-search"></i> Search Programs and Applications</h2>
+                    <h2 class="mb-0"><i class="bi bi-search"></i> Pretraži programe i prijave</h2>
                 </div>
                 <div class="card-body">
                     <form asp-action="Results" method="get" class="mb-4">
                         <div class="input-group">
                             <input type="text" id="searchInput" name="query" class="form-control form-control-lg"
-                                   placeholder="Search by university, semester, status, subject..."
+                                   placeholder="Pretraga po univerzitetu, programu, studentima, semestru..."
                                    value="@Model.Query" required />
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-search"></i> Search
+                                <i class="bi bi-search"></i> Pretraga
                             </button>
                         </div>
                         <small class="form-text text-muted mt-2">
-                            Search for programs and applications by any keyword. Try terms like "Winter", "Summer", "UTOKU", "USPJESNA", "NEUSPJESNA".
+                            Pretraga po ključnim riječima.
                         </small>
                     </form>
 
                     @if (!string.IsNullOrEmpty(Model.Query))
                     {
                         <div class="alert alert-info">
-                            <p class="mb-0">No results found for "<strong>@Model.Query</strong>". Try using different keywords.</p>
+                            <p class="mb-0">Nema pronađenih rezultata za "<strong>@Model.Query</strong>". Pokušajte s drugim ključnim riječima.</p>
                         </div>
                     }
                 </div>

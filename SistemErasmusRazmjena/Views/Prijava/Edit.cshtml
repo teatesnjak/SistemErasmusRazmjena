@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit Application";
 }
 
-<h1>Edit Application</h1>
+<h1>Uredi prijavu</h1>
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -24,17 +24,17 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5>Application Details</h5>
+                    <h5>Detalji prijave</h5>
                 </div>
                 <div class="card-body">
                     <dl class="row">
-                        <dt class="col-sm-3">Academic Year</dt>
+                        <dt class="col-sm-3">Akademska godina</dt>
                         <dd class="col-sm-9">@Model.AkademskaGodina</dd>
 
-                        <dt class="col-sm-3">University</dt>
+                        <dt class="col-sm-3">Univerzitet</dt>
                         <dd class="col-sm-9">@Model.Naziv</dd>
 
-                        <dt class="col-sm-3">Semester</dt>
+                        <dt class="col-sm-3">Semestar</dt>
                         <dd class="col-sm-9">@Model.Semestar</dd>
                     </dl>
                 </div>
@@ -42,11 +42,11 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5>Documentation</h5>
+                    <h5>Dokumentacija</h5>
                 </div>
                 <div class="card-body">
                     <p class="text-muted mb-3">
-                        Please check the boxes for documents you have prepared for your application.
+                        Molimo označite dokumente koje ste pripremili za prijavu
                     </p>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.CV" id="cv" />
@@ -54,25 +54,26 @@
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.MotivacionoPismo" id="motivationLetter" />
-                        <label class="form-check-label" for="motivationLetter">Motivation Letter</label>
+                        <label class="form-check-label" for="motivationLetter">Motivaciono pismo</label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.UgovorOUcenju" id="learningAgreement" />
-                        <label class="form-check-label" for="learningAgreement">Learning Agreement</label>
+                        <label class="form-check-label" for="learningAgreement">Ugovor o učenju</label>
                     </div>
                 </div>
             </div>
 
             <div class="card mb-4" id="subjectsCard">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5>Subjects</h5>
+                    <h5>Predmeti</h5>
                     <button type="button" class="btn btn-sm btn-primary" id="addSubjectBtn">
-                        <i class="bi bi-plus-circle"></i> Add Subject
+                        <i class="bi bi-plus-circle"></i> Dodaj predmet
                     </button>
                 </div>
                 <div class="card-body">
                     <p class="text-muted mb-3">
-                        Please list the subjects you plan to take at the accepting university and their equivalents at your home university.
+
+                        Molimo navedite predmete koje planirate pohađati na stranom univerzitetu i njihove ekvivalente na matičnom univerzitetu.
                     </p>
                     <div id="subjectsContainer">
                         @for (int i = 0; i < Model.PrijedlogPredmeta.Count; i++)
@@ -81,18 +82,18 @@
                                 <input type="hidden" asp-for="PrijedlogPredmeta[i].PredmetID" />
                                 <input type="hidden" asp-for="PrijedlogPredmeta[i].Status" />
                                 <div class="col-md-5">
-                                    <label class="form-label">Home Subject</label>
+                                    <label class="form-label">Predmeti matičnog univerziteta</label>
                                     <input type="text" class="form-control" asp-for="PrijedlogPredmeta[i].PredmetHome" />
                                     <span asp-validation-for="PrijedlogPredmeta[i].PredmetHome" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-5">
-                                    <label class="form-label">Accepting Subject</label>
+                                    <label class="form-label">Predmeti stranog univerziteta</label>
                                     <input type="text" class="form-control" asp-for="PrijedlogPredmeta[i].PredmetAccepting" />
                                     <span asp-validation-for="PrijedlogPredmeta[i].PredmetAccepting" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
                                     <button type="button" class="btn btn-sm btn-danger remove-subject-btn mb-2">
-                                        <i class="bi bi-trash"></i> Remove
+                                        <i class="bi bi-trash"></i> Ukloni
                                     </button>
                                 </div>
                             </div>
@@ -102,8 +103,8 @@
             </div>
 
             <div class="mt-4">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <a asp-action="Details" asp-route-id="@Model.PrijavaID" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Sačuvaj promjene</button>
+                <a asp-action="Details" asp-route-id="@Model.PrijavaID" class="btn btn-secondary">Otkaži</a>
             </div>
         </form>
     </div>

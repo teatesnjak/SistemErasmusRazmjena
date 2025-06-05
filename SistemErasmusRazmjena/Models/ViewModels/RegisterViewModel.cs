@@ -24,5 +24,7 @@ namespace SistemErasmusRazmjena.Models.ViewModels
         public int FakultetID { get; set; }
 
         public List<Fakultet> Fakulteti { get; set; } = new List<Fakultet>();
+        public string FirstName { get; set; } // Added FirstName property
+        public string LastName { get; set; }  // Added LastName property
     }
 }

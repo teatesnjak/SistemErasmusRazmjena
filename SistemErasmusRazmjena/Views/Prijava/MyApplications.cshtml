@@ -5,15 +5,15 @@
 }
 
 <div class="container">
-    <h1 class="mb-4">My Applications</h1>
+    <h1 class="mb-4">Moje prijave</h1>
 
     <div class="row">
         <!-- In Progress Applications -->
         <div class="col-md-4">
-            <h3 class="text-warning">In Progress</h3>
+            <h3 class="text-warning">U toku</h3>
             @if (!Model.UTOKU.Any())
             {
-                <p>No applications in progress.</p>
+                <p>Nema prijava u toku.</p>
             }
             else
             {
@@ -23,7 +23,7 @@
                         <li class="list-group-item">
                             <strong>@item.ErasmusProgram.Univerzitet</strong>
                             <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary float-end">
-                                <i class="bi bi-eye"></i> View
+                                <i class="bi bi-eye"></i> Detalji
                             </a>
                         </li>
                     }
@@ -33,10 +33,10 @@
 
         <!-- Successful Applications -->
         <div class="col-md-4">
-            <h3 class="text-success">Successful</h3>
+            <h3 class="text-success">Uspješna</h3>
             @if (!Model.USPJESNA.Any())
             {
-                <p>No successful applications.</p>
+                <p>Nema uspješnih prijava.</p>
             }
             else
             {
@@ -46,7 +46,7 @@
                         <li class="list-group-item">
                             <strong>@item.ErasmusProgram.Univerzitet</strong>
                             <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary float-end">
-                                <i class="bi bi-eye"></i> View
+                                <i class="bi bi-eye"></i> Detalji
                             </a>
                         </li>
                     }
@@ -56,10 +56,10 @@
 
         <!-- Unsuccessful Applications -->
         <div class="col-md-4">
-            <h3 class="text-danger">Unsuccessful</h3>
+            <h3 class="text-danger">Neuspješna</h3>
             @if (!Model.NEUSPJESNA.Any())
             {
-                <p>No unsuccessful applications.</p>
+                <p>Nema neuspješnih prijava.</p>
             }
             else
             {
@@ -69,7 +69,7 @@
                         <li class="list-group-item">
                             <strong>@item.ErasmusProgram.Univerzitet</strong>
                             <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-outline-primary float-end">
-                                <i class="bi bi-eye"></i> View
+                                <i class="bi bi-eye"></i> Detalji
                             </a>
                         </li>
                     }

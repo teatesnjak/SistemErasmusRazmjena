@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Dodaj novi Erasmus program</h1>
 
 <h4>ErasmusProgram</h4>
 <hr />
@@ -37,9 +37,10 @@
                 <textarea asp-for="Opis" class="form-control custom-width"></textarea>
                 <span asp-validation-for="Opis" class="text-danger"></span>
             </div>
-            
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Dodaj program</button>
+                <a asp-action="Index" class="btn btn-secondary">Nazad na listu</a>
+            </div>
         </form>
     </div>
 </div>

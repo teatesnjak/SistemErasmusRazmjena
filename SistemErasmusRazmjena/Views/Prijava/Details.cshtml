@@ -4,7 +4,7 @@
     ViewData["Title"] = "Application Details";
 }
 
-<h1>Application Details</h1>
+<h1>Detalji prijave</h1>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -18,16 +18,16 @@
         <dt class="col-sm-3">Student</dt>
         <dd class="col-sm-9">@Model.StudentName</dd>
 
-        <dt class="col-sm-3">Academic Year</dt>
+        <dt class="col-sm-3">Akademska godina</dt>
         <dd class="col-sm-9">@Model.AkademskaGodina</dd>
 
-        <dt class="col-sm-3">University</dt>
+        <dt class="col-sm-3">Univerzitet</dt>
         <dd class="col-sm-9">@Model.Naziv</dd>
 
-        <dt class="col-sm-3">Semester</dt>
+        <dt class="col-sm-3">Semestar</dt>
         <dd class="col-sm-9">@Model.Semestar</dd>
 
-        <dt class="col-sm-3">Description</dt>
+        <dt class="col-sm-3">Opis</dt>
         <dd class="col-sm-9">@Model.Opis</dd>
 
         <dt class="col-sm-3">Status</dt>
@@ -43,54 +43,54 @@
     {
         <div class="card mb-4">
             <div class="card-header">
-                <h5>Update Application Status</h5>
+                <h5>Promijeni status prijave</h5>
             </div>
             <div class="card-body">
                 <form asp-action="UpdateStatus" method="post" class="d-flex gap-2">
                     <input type="hidden" name="id" value="@Model.PrijavaID" />
                     <button type="submit" name="status" value="@StatusPrijave.USPJESNA" class="btn btn-success">
-                        Approve Application
+                        Odobri prijavu
                     </button>
                     <button type="submit" name="status" value="@StatusPrijave.NEUSPJESNA" class="btn btn-danger">
-                        Reject Application
+                        Odbij prijavu
                     </button>
                 </form>
             </div>
         </div>
     }
 
-    <h4>Documentation</h4>
+    <h4>Dokumentacija</h4>
     <div class="card mb-4">
         <div class="card-body">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     CV
                     <span class="badge @(Model.DokumentacijaOptions.CV ? "bg-success" : "bg-danger") rounded-pill">
-                        @(Model.DokumentacijaOptions.CV ? "Submitted" : "Not Submitted")
+                        @(Model.DokumentacijaOptions.CV ? "Poslano" : "Nije poslano")
                     </span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Motivation Letter
+                    Motivaciono pismo
                     <span class="badge @(Model.DokumentacijaOptions.MotivacionoPismo ? "bg-success" : "bg-danger") rounded-pill">
-                        @(Model.DokumentacijaOptions.MotivacionoPismo ? "Submitted" : "Not Submitted")
+                        @(Model.DokumentacijaOptions.MotivacionoPismo ? "Poslano" : "Nije poslano")
                     </span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Learning Agreement
+                    Ugovor o učenju
                     <span class="badge @(Model.DokumentacijaOptions.UgovorOUcenju ? "bg-success" : "bg-danger") rounded-pill">
-                        @(Model.DokumentacijaOptions.UgovorOUcenju ? "Submitted" : "Not Submitted")
+                        @(Model.DokumentacijaOptions.UgovorOUcenju ? "Poslano" : "Nije poslano")
                     </span>
                 </li>
             </ul>
         </div>
     </div>
 
-    <h4>Subjects</h4>
+    <h4>Predmeti</h4>
     <table class="table">
         <thead>
             <tr>
-                <th>Home Subject</th>
-                <th>Accepting Subject</th>
+                <th>Predmeti matičnog univerzitet</th>
+                <th>Predmeti stranog univerziteta</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -110,13 +110,47 @@
             }
         </tbody>
     </table>
+    @if (User.IsInRole("Student"))
+    {
+        <div class="mt-4">
+            @if (Model.Status == StatusPrijave.UTOKU || Model.Status == StatusPrijave.USPJESNA)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.PrijavaID" class="btn btn-primary">
+                    <i class="bi bi-pencil-square"></i> Uredi prijavu
+                </a>
+            }
+            else if (Model.Status == StatusPrijave.NEUSPJESNA)
+            {
+                <a asp-action="Reapply" asp-route-id="@Model.PrijavaID" class="btn btn-warning">
+                    <i class="bi bi-arrow-repeat"></i> Ponovo se prijavi
+                </a>
+            }
+        </div>
+    }
 
     @if (User.IsInRole("ECTSKoordinator"))
     {
         <a asp-action="ManageSubjects" asp-route-id="@Model.PrijavaID" class="btn btn-primary">
-            <i class="bi bi-pencil-square"></i> Manage Subjects
+            <i class="bi bi-pencil-square"></i> Upravljaj predmetima
         </a>
     }
+
+    <div class="mt-4">
+        @if (User.IsInRole("Student"))
+        {
+            <a asp-action="MyApplications" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Nazad na listu
+            </a>
+        }
+        else if (User.IsInRole("Admin") || User.IsInRole("ECTSKoordinator"))
+        {
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Nazad na listu
+            </a>
+        }
+    </div>
+
+
 </div>
 
 @section Scripts {

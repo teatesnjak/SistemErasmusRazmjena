@@ -4,11 +4,11 @@
 }
 
 <div class="container mt-4">
-    <h2>Application Details</h2>
+    <h2>Detalji prijave</h2>
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <span>Program Information</span>
+            <span>Detalji programa</span>
             <span class="badge bg-light text-dark">@Model.DateCreated.ToString("dd MMM yyyy")</span>
         </div>
         <div class="card-body">
@@ -40,7 +40,7 @@
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            <span>Documentation</span>
+            <span>Dokumentacija</span>
         </div>
         <div class="card-body">
             <div class="row">
@@ -51,12 +51,12 @@
                             @if (Model.Dokumentacija.CV)
                             {
                                 <i class="fas fa-check-circle text-success fa-2x"></i>
-                                <p class="mt-2 mb-0">Submitted</p>
+                                <p class="mt-2 mb-0">Dostavljen</p>
                             }
                             else
                             {
                                 <i class="fas fa-times-circle text-danger fa-2x"></i>
-                                <p class="mt-2 mb-0">Not Submitted</p>
+                                <p class="mt-2 mb-0">Nije dostavljen</p>
                             }
                         </div>
                     </div>
@@ -64,16 +64,16 @@
                 <div class="col-md-4">
                     <div class="card mb-2 @(Model.Dokumentacija.MotivacionoPismo ? "border-success" : "border-danger")">
                         <div class="card-body text-center">
-                            <h5>Motivation Letter</h5>
+                            <h5>Motivaciono pismo</h5>
                             @if (Model.Dokumentacija.MotivacionoPismo)
                             {
                                 <i class="fas fa-check-circle text-success fa-2x"></i>
-                                <p class="mt-2 mb-0">Submitted</p>
+                                <p class="mt-2 mb-0">Dostavljeno</p>
                             }
                             else
                             {
                                 <i class="fas fa-times-circle text-danger fa-2x"></i>
-                                <p class="mt-2 mb-0">Not Submitted</p>
+                                <p class="mt-2 mb-0">Nije dostavljeno</p>
                             }
                         </div>
                     </div>
@@ -81,16 +81,16 @@
                 <div class="col-md-4">
                     <div class="card mb-2 @(Model.Dokumentacija.UgovorOUcenju ? "border-success" : "border-danger")">
                         <div class="card-body text-center">
-                            <h5>Learning Agreement</h5>
+                            <h5>Ugovor o učenju</h5>
                             @if (Model.Dokumentacija.UgovorOUcenju)
                             {
                                 <i class="fas fa-check-circle text-success fa-2x"></i>
-                                <p class="mt-2 mb-0">Submitted</p>
+                                <p class="mt-2 mb-0">Dostavljen</p>
                             }
                             else
                             {
                                 <i class="fas fa-times-circle text-danger fa-2x"></i>
-                                <p class="mt-2 mb-0">Not Submitted</p>
+                                <p class="mt-2 mb-0">Nije dostavljen</p>
                             }
                         </div>
                     </div>
@@ -100,6 +100,6 @@
     </div>
 
     <div class="d-flex justify-content-between">
-        <a asp-action="AvailablePrograms" class="btn btn-secondary">Back to Programs</a>
+        <a asp-action="AvailablePrograms" class="btn btn-secondary">Nazad na programe</a>
     </div>
 </div>

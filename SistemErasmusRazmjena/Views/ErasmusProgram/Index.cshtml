@@ -5,13 +5,21 @@
 }
 
 <div class="container">
-    <h1 class="mb-4">Erasmus Programs</h1>
+    <h1 class="mb-4">Erasmus programi</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     @if (User.IsInRole("Admin"))
     {
         <p>
             <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i>Create New Program
+                <i class="bi bi-plus-circle me-1"></i>Dodaj novi program
             </a>
         </p>
     }
@@ -35,16 +43,17 @@
                     <td>@Html.DisplayFor(modelItem => item.Univerzitet)</td>
                     <td>@Html.DisplayFor(modelItem => item.Opis)</td>
                     <td class="action-links">
-                        <a asp-action="Details" asp-route-id="@item.ID" class="text-primary">
-                            <i class="bi bi-info-circle"></i>Details
-                        </a>
+                            <a asp-action="Details" asp-route-id="@item.ID" class="text-primary d-inline-flex align-items-center">
+                                <i class="bi bi-info-circle me-1"></i>Detalji
+                            </a>
+
                         @if (User.IsInRole("Admin"))
                         {
                             <a asp-action="Edit" asp-route-id="@item.ID" class="text-success">
-                                <i class="bi bi-pencil-square me-1"></i>Edit
+                                <i class="bi bi-pencil-square me-1"></i>Uredi
                             </a>
                             <a asp-action="Delete" asp-route-id="@item.ID" class="text-danger">
-                                <i class="bi bi-trash me-1"></i>Delete
+                                <i class="bi bi-trash me-1"></i>Obriši
                             </a>
                         }
                     </td>

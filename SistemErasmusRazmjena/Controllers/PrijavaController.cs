@@ -42,7 +42,7 @@ namespace SistemErasmusRazmjena.Controllers
                 var currentUser = await _userManager.GetUserAsync(User);
                 if (currentUser == null)
                 {
-                    _logger.LogWarning("Current user not found in Index action");
+                    _logger.LogWarning("Trenutni korisnik nije pronađen u Index-u");
                     return Forbid();
                 }
 
@@ -63,7 +63,7 @@ namespace SistemErasmusRazmjena.Controllers
                     }
                     else
                     {
-                        _logger.LogWarning("ECTSKoordinator user {UserId} has no FakultetID assigned", currentUser.Id);
+                        _logger.LogWarning("ECTS Koordinator korisnik {UserId} nema određen FakultetID", currentUser.Id);
                         // Return empty results if coordinator has no fakultet assigned
                         prijaveQuery = prijaveQuery.Where(p => false);
                     }
@@ -73,7 +73,7 @@ namespace SistemErasmusRazmjena.Controllers
                     .OrderByDescending(p => p.DateCreated)
                     .ToListAsync();
 
-                _logger.LogInformation("Loaded {Count} applications for user {UserId} with role {Role}",
+                _logger.LogInformation("Učitane {Count} prijave za korisnika {UserId} s rolom {Role}",
                     prijave.Count, currentUser.Id, User.IsInRole("Admin") ? "Admin" : "ECTSKoordinator");
 
                 var viewModel = new PrijavaSegmentedViewModel
@@ -87,8 +87,8 @@ namespace SistemErasmusRazmjena.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Index action: {Message}", ex.Message);
-                TempData["ErrorMessage"] = "An error occurred while loading applications.";
+                _logger.LogError(ex, "Greška u indexu: {Message}", ex.Message);
+                TempData["ErrorMessage"] = "Greška se desila prilikom učitavanja prijave.";
                 return View(new PrijavaSegmentedViewModel());
             }
         }
@@ -108,6 +108,9 @@ namespace SistemErasmusRazmjena.Controllers
             return RedirectToAction(nameof(Details), new { id = prijava.ID });
         }
 
+
+
+
         [HttpGet]
         [Authorize(Roles = "ECTSKoordinator")]
         public async Task<IActionResult> ManageSubjects(int id)
@@ -116,8 +119,8 @@ namespace SistemErasmusRazmjena.Controllers
             {
                 if (id <= 0)
                 {
-                    _logger.LogWarning("Invalid application ID received: {Id}", id);
-                    return BadRequest("Invalid application ID.");
+                    _logger.LogWarning("Nepostojuća s prijava s ID-jem: {Id}", id);
+                    return BadRequest("Nepostojući ID prijave.");
                 }
 
                 var prijava = await _context.Prijave
@@ -130,21 +133,21 @@ namespace SistemErasmusRazmjena.Controllers
 
                 if (prijava == null)
                 {
-                    _logger.LogWarning("Application with ID {Id} not found", id);
-                    return NotFound("Application not found.");
+                    _logger.LogWarning("Prijava s ID-jem {Id} nije pronađena", id);
+                    return NotFound("Prijava nije pronađena.");
                 }
 
                 var currentUser = await _userManager.GetUserAsync(User);
                 if (currentUser == null)
                 {
-                    _logger.LogWarning("Current user not found in ManageSubjects action");
+                    _logger.LogWarning("Trenutni korisnik nije pronađen u ManageSubjects");
                     return Forbid();
                 }
 
                 // Authorization check based on user role
                 if (!User.IsInRole("ECTSKoordinator") || (currentUser.FakultetID.HasValue && prijava.Student?.FakultetID != currentUser.FakultetID.Value))
                 {
-                    _logger.LogWarning("User {UserId} attempted to access application {ApplicationId} without authorization",
+                    _logger.LogWarning("Korisnik {UserId} je pokušao da pristupi prijavi {ApplicationId} bez dozvole",
                         currentUser.Id, id);
                     return Forbid();
                 }
@@ -178,61 +181,152 @@ namespace SistemErasmusRazmjena.Controllers
                     }).ToList() ?? new List<PredmetViewModel>()
                 };
 
-                _logger.LogInformation("Successfully loaded ManageSubjects view for application ID {Id} by user {UserId}",
+                _logger.LogInformation("Uspješno sačuvana ManageSubjects view za prijavu ID-a {Id} od korisnika {UserId}",
                     id, currentUser.Id);
 
                 return View("ManageSubjects", viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in ManageSubjects action for ID {Id}: {Message}", id, ex.Message);
-                TempData["ErrorMessage"] = "An error occurred while loading the subjects.";
+                _logger.LogError(ex, "Greška u ManageSubjects za ID {Id}: {Message}", id, ex.Message);
+                TempData["ErrorMessage"] = "Greška se desila prilikom izlistavanja prijava.";
                 return RedirectToAction(nameof(Index));
             }
         }
 
+        // CONTROLLER METHOD - Fixed UpdateAllSubjectStatuses
         [HttpPost]
         [Authorize(Roles = "ECTSKoordinator")]
-        public async Task<IActionResult> UpdateSubjectStatus(int predmetId, string status)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAllSubjectStatuses(int prijavaId, List<PredmetViewModel> subjects)
         {
             try
             {
-                if (predmetId <= 0)
+                _logger.LogInformation("UpdateAllSubjectStatuses pozvan s prijavaId: {PrijavaId}, broj predmeta: {Count}",
+                    prijavaId, subjects?.Count ?? 0);
+
+                // Debug logging - log all received subjects
+                if (subjects != null)
                 {
-                    _logger.LogWarning("Invalid subject ID received: {PredmetId}", predmetId);
-                    return BadRequest("Invalid subject ID.");
+                    foreach (var subject in subjects.Select((s, index) => new { Subject = s, Index = index }))
+                    {
+                        _logger.LogInformation("Primljeni predmeti[{Index}]: Id={Id}, Status={Status}",
+                            subject.Index, subject.Subject.Id, subject.Subject.Status);
+                    }
                 }
 
-                var predmet = await _context.Predmeti.FirstOrDefaultAsync(p => p.PredmetID == predmetId);
-                if (predmet == null)
+                if (subjects == null || !subjects.Any())
                 {
-                    _logger.LogWarning("Subject with ID {PredmetId} not found", predmetId);
-                    return NotFound("Subject not found.");
+                    _logger.LogWarning("Nema ponuđenih predmeta za ažuriranje");
+                    TempData["ErrorMessage"] = "Nema predmeta za ažuriranje.";
+                    return RedirectToAction(nameof(ManageSubjects), new { id = prijavaId });
                 }
 
-                // Update the status
-                if (Enum.TryParse(status, out StatusPredmeta newStatus))
+                var prijava = await _context.Prijave
+                    .Include(p => p.Student)
+                    .Include(p => p.PrijedlogPredmeta)
+                    .ThenInclude(pp => pp.Rows)
+                    .FirstOrDefaultAsync(p => p.ID == prijavaId);
+
+                if (prijava == null)
                 {
-                    predmet.Status = newStatus;
-                    _context.Update(predmet);
+                    _logger.LogWarning("Prijava s ID-jem {PrijavaId} nije pronađena", prijavaId);
+                    TempData["ErrorMessage"] = "Prijava nije pronađena.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Authorization check
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser == null || (!User.IsInRole("ECTSKoordinator") ||
+                    (currentUser.FakultetID.HasValue && prijava.Student?.FakultetID != currentUser.FakultetID.Value)))
+                {
+                    _logger.LogWarning("Pokušaj neovlaštenog pristupa za ažuriranje statusa predmeta {PrijavaId}", prijavaId);
+                    return Forbid();
+                }
+
+                // Check if PrijedlogPredmeta exists
+                if (prijava.PrijedlogPredmeta?.Rows == null || !prijava.PrijedlogPredmeta.Rows.Any())
+                {
+                    _logger.LogWarning("Nema ponuđenih redova sa predmetima za prijavu {PrijavaId}", prijavaId);
+                    TempData["ErrorMessage"] = "Nema ponuđenih predmeta na prijavi.";
+                    return RedirectToAction(nameof(ManageSubjects), new { id = prijavaId });
+                }
+
+                int updatedCount = 0;
+                var errors = new List<string>();
+
+                foreach (var subject in subjects)
+                {
+                    if (subject.Id <= 0)
+                    {
+                        _logger.LogWarning("Nevažeći predmet ID: {SubjectId}", subject.Id);
+                        continue;
+                    }
+
+                    var existingSubject = prijava.PrijedlogPredmeta.Rows.FirstOrDefault(r => r.PredmetID == subject.Id);
+                    if (existingSubject != null)
+                    {
+                        var oldStatus = existingSubject.Status.ToString();
+                        _logger.LogInformation("Pronađen postojući predmet {SubjectId} s trenutnim statusom: {CurrentStatus}",
+                            subject.Id, oldStatus);
+
+                        // Try to parse the new status
+                        if (Enum.TryParse<StatusPredmeta>(subject.Status, true, out StatusPredmeta newStatus))
+                        {
+                            if (existingSubject.Status != newStatus)
+                            {
+                                existingSubject.Status = newStatus;
+                                updatedCount++;
+                                _logger.LogInformation("Ažuriran status predmeta {SubjectId} sa {OldStatus} na {NewStatus}",
+                                    subject.Id, oldStatus, newStatus);
+                            }
+                            else
+                            {
+                                _logger.LogInformation("Predmet {SubjectId} već ima status {Status}",
+                                    subject.Id, newStatus);
+                            }
+                        }
+                        else
+                        {
+                            var error = $"Invalid status value '{subject.Status}' for subject {subject.Id}";
+                            _logger.LogWarning(error);
+                            errors.Add(error);
+                        }
+                    }
+                    else
+                    {
+                        var error = $"Subject with ID {subject.Id} not found in application";
+                        _logger.LogWarning(error + " {PrijavaId}", prijavaId);
+                        errors.Add(error);
+                    }
+                }
+
+                if (updatedCount > 0)
+                {
                     await _context.SaveChangesAsync();
-
-                    TempData["SuccessMessage"] = "Subject status updated successfully.";
-                    return RedirectToAction(nameof(ManageSubjects), new { id = predmet.PrijedlogPredmetaID });
+                    TempData["SuccessMessage"] = $"Successfully updated {updatedCount} subject status(es).";
+                    _logger.LogInformation("Uspješno ažuriran {Count} statusa predmeta za prijavu {PrijavaId}",
+                        updatedCount, prijavaId);
+                }
+                else if (errors.Any())
+                {
+                    TempData["ErrorMessage"] = "Greške: " + string.Join("; ", errors);
                 }
                 else
                 {
-                    _logger.LogWarning("Invalid status value received: {Status}", status);
-                    return BadRequest("Invalid status value.");
+                    TempData["InfoMessage"] = "Nikakve promjene nisu napravljene.";
+                    _logger.LogInformation("Nikakve promjene nisu napravljene na statusima predmeta za prijavu {PrijavaId}", prijavaId);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while updating subject status: {Message}", ex.Message);
-                TempData["ErrorMessage"] = "An error occurred while updating the subject status.";
-                return RedirectToAction(nameof(ManageSubjects), new { id = predmetId });
+                _logger.LogError(ex, "Greška prilikom mijenjanja statusa predmeta na prijavi {PrijavaId}: {Message}", prijavaId, ex.Message);
+                TempData["ErrorMessage"] = "Greška se desila prilikom mijenjanja statusa predmeta. Molimo pokušajte opet.";
             }
+
+            return RedirectToAction(nameof(ManageSubjects), new { id = prijavaId });
         }
+
 
 
 
@@ -270,7 +364,7 @@ namespace SistemErasmusRazmjena.Controllers
         {
             if (programId <= 0)
             {
-                return BadRequest("Invalid program ID.");
+                return BadRequest("Nvežeći program ID.");
             }
 
             // Get the current user
@@ -286,7 +380,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (existingApplication != null)
             {
-                TempData["Info"] = "You already have an application for this program.";
+                TempData["Info"] = "Već ste prijavljeni na ovaj program.";
                 return RedirectToAction(nameof(Details), new { id = existingApplication.ID });
             }
 
@@ -297,7 +391,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (erasmusProgram == null)
             {
-                return NotFound("Program not found.");
+                return NotFound("Program nije pronađen.");
             }
 
             // Create the view model with program details
@@ -330,7 +424,7 @@ namespace SistemErasmusRazmjena.Controllers
         {
             if (model == null)
             {
-                _logger.LogWarning("Model binding failed - received null model");
+                _logger.LogWarning("Model binding nespješan - primljen null model");
                 return View(new PrijavaCreateViewModel());
             }
 
@@ -338,8 +432,8 @@ namespace SistemErasmusRazmjena.Controllers
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(currentUserId))
             {
-                _logger.LogError("Unable to get current user ID");
-                ModelState.AddModelError("", "Unable to identify the current user. Please log out and log back in.");
+                _logger.LogError("Nije moguće naći trenutni kornički ID");
+                ModelState.AddModelError("", "Nije moguće identifikovati trenutnog korisnika. Molimo Vas da se odjavite, a zatim ponovo prijavite.");
                 return View(model);
             }
 
@@ -347,8 +441,8 @@ namespace SistemErasmusRazmjena.Controllers
             var userExists = await _context.Users.AnyAsync(u => u.Id == currentUserId);
             if (!userExists)
             {
-                _logger.LogError("Current user ID {UserId} not found in database", currentUserId);
-                ModelState.AddModelError("", "User account not found. Please contact support.");
+                _logger.LogError("Trenutni korisnički ID {UserId} nije pronađen u bazi podataka", currentUserId);
+                ModelState.AddModelError("", "Korisnik nije pronađen. Molimo Vas kntaktirajte korisničku podršku.");
                 return View(model);
             }
 
@@ -366,42 +460,42 @@ namespace SistemErasmusRazmjena.Controllers
             // Validate required fields
             if (model.ErasmusProgramID <= 0)
             {
-                ModelState.AddModelError(nameof(model.ErasmusProgramID), "Erasmus Program ID is required.");
+                ModelState.AddModelError(nameof(model.ErasmusProgramID), "Erasmus Program ID je neophodan.");
             }
 
             if (string.IsNullOrEmpty(model.Naziv))
             {
-                ModelState.AddModelError(nameof(model.Naziv), "The Naziv field is required.");
+                ModelState.AddModelError(nameof(model.Naziv), "Naziv je neophodan.");
             }
 
             if (string.IsNullOrEmpty(model.AkademskaGodina))
             {
-                ModelState.AddModelError(nameof(model.AkademskaGodina), "The AkademskaGodina field is required.");
+                ModelState.AddModelError(nameof(model.AkademskaGodina), "AkademskaGodina je neophodna.");
             }
 
             if (string.IsNullOrEmpty(model.Semestar))
             {
-                ModelState.AddModelError(nameof(model.Semestar), "The Semestar field is required.");
+                ModelState.AddModelError(nameof(model.Semestar), "Semestar je neophodan.");
             }
 
             if (model.DateAdded == default(DateTime))
             {
-                ModelState.AddModelError(nameof(model.DateAdded), "The DateAdded field is required.");
+                ModelState.AddModelError(nameof(model.DateAdded), "DateAdded je neophodno.");
             }
 
             if (string.IsNullOrEmpty(model.Opis))
             {
-                ModelState.AddModelError(nameof(model.Opis), "The Opis field is required.");
+                ModelState.AddModelError(nameof(model.Opis), "Opis je neophodan.");
             }
 
             if (string.IsNullOrEmpty(model.Univerzitet))
             {
-                ModelState.AddModelError(nameof(model.Univerzitet), "The Univerzitet field is required.");
+                ModelState.AddModelError(nameof(model.Univerzitet), "Univerzitet je neophodan.");
             }
 
             if (model.DokumentacijaOptions == null)
             {
-                ModelState.AddModelError(nameof(model.DokumentacijaOptions), "The DokumentacijaOptions field is required.");
+                ModelState.AddModelError(nameof(model.DokumentacijaOptions), "DokumentacijaOptions je neophodno.");
             }
 
             // Filter out empty subjects before validation
@@ -414,16 +508,16 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (model.PrijedlogPredmeta == null || !model.PrijedlogPredmeta.Any())
             {
-                ModelState.AddModelError(nameof(model.PrijedlogPredmeta), "At least one subject must be provided.");
+                ModelState.AddModelError(nameof(model.PrijedlogPredmeta), "Neophodno je unijeti barem jedan predmet.");
                 return View(model);
             }
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Model state is invalid");
+                _logger.LogWarning("Model state je nevažeći");
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    _logger.LogWarning("Validation error: {ErrorMessage}", error.ErrorMessage);
+                    _logger.LogWarning("Greška prilikom validacije: {ErrorMessage}", error.ErrorMessage);
                 }
 
                 // Re-fetch the program data if validation fails
@@ -458,7 +552,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (existingApplication != null)
             {
-                TempData["Info"] = "You already have an application for this program.";
+                TempData["Info"] = "Već ste prijavljeni na ovaj program.";
                 return RedirectToAction(nameof(Details), new { id = existingApplication.ID });
             }
 
@@ -498,16 +592,16 @@ namespace SistemErasmusRazmjena.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                _logger.LogInformation("Application created successfully for user {UserId} and program {ProgramId}",
+                _logger.LogInformation("Prijava uspješno sačuvana za korisnika {UserId} i program {ProgramId}",
                     currentUserId, model.ErasmusProgramID);
 
-                TempData["SuccessMessage"] = "Your application has been submitted successfully.";
+                TempData["SuccessMessage"] = "Vaša prijava je uspješno poslana.";
                 return RedirectToAction(nameof(MyApplications));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error while saving application: {Message}", ex.Message);
+                _logger.LogError(ex, "Greška prilikom izrade prijave: {Message}", ex.Message);
                 ModelState.AddModelError("", $"An error occurred while submitting your application: {ex.Message}");
 
                 // Re-populate the model for the view
@@ -542,8 +636,8 @@ namespace SistemErasmusRazmjena.Controllers
             {
                 if (id <= 0)
                 {
-                    _logger.LogWarning("Invalid application ID received: {Id}", id);
-                    return BadRequest("Invalid application ID.");
+                    _logger.LogWarning("Nevažeći id prijave: {Id}", id);
+                    return BadRequest("Nevažeći id prijave.");
                 }
 
                 var prijava = await _context.Prijave
@@ -556,14 +650,14 @@ namespace SistemErasmusRazmjena.Controllers
 
                 if (prijava == null)
                 {
-                    _logger.LogWarning("Application with ID {Id} not found", id);
-                    return NotFound("Application not found.");
+                    _logger.LogWarning("Prijava s ID-jem {Id} nije pronađena", id);
+                    return NotFound("Prijava nije pronađena.");
                 }
 
                 var currentUser = await _userManager.GetUserAsync(User);
                 if (currentUser == null)
                 {
-                    _logger.LogWarning("Current user not found in Details action");
+                    _logger.LogWarning("Trenutni korisnik nije pronađen u Detaljima");
                     return Forbid();
                 }
 
@@ -588,7 +682,7 @@ namespace SistemErasmusRazmjena.Controllers
 
                 if (!isAuthorized)
                 {
-                    _logger.LogWarning("User {UserId} attempted to access application {ApplicationId} without authorization",
+                    _logger.LogWarning("Korisnik {UserId} pokušao pristupiti prijavi {ApplicationId} bez dotvole",
                         currentUser.Id, id);
                     return Forbid();
                 }
@@ -628,15 +722,15 @@ namespace SistemErasmusRazmjena.Controllers
 
                 };
 
-                _logger.LogInformation("Successfully loaded application details for ID {Id} by user {UserId}",
+                _logger.LogInformation("Uspješno učitani detalji prijave za ID {Id} od strane korisnika {UserId}",
                     id, currentUser.Id);
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in Details action for ID {Id}: {Message}", id, ex.Message);
-                TempData["ErrorMessage"] = "An error occurred while loading the application details.";
+                _logger.LogError(ex, "Greška u Detaljima za ID {Id}: {Message}", id, ex.Message);
+                TempData["ErrorMessage"] = "Greška se desila prilikom učitavanja detalja za prijavu.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -660,10 +754,10 @@ namespace SistemErasmusRazmjena.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null || prijava.StudentID != currentUser.Id) return Forbid();
 
-            // Only allow editing applications that are in progress
-            if (prijava.Status != StatusPrijave.UTOKU)
+            // Allow editing applications that are in progress OR successful
+            if (prijava.Status != StatusPrijave.UTOKU && prijava.Status != StatusPrijave.USPJESNA)
             {
-                TempData["ErrorMessage"] = "Only applications in progress can be edited.";
+                TempData["ErrorMessage"] = "Samo prijave koje su u toku ili uspješne mogu biti uređene.";
                 return RedirectToAction(nameof(Details), new { id = prijava.ID });
             }
 
@@ -703,7 +797,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (model.PrijedlogPredmeta.Count == 0)
             {
-                ModelState.AddModelError("", "At least one subject must be provided");
+                ModelState.AddModelError("", "Barem jedan predmet mora biti ponuđen");
                 return View(model);
             }
 
@@ -716,11 +810,16 @@ namespace SistemErasmusRazmjena.Controllers
                 .FirstOrDefaultAsync(p => p.ID == model.PrijavaID && p.StudentID == currentUser.Id);
 
             if (prijava == null) return NotFound();
-            if (prijava.Status != StatusPrijave.UTOKU)
+
+            // Allow editing applications that are in progress OR successful
+            if (prijava.Status != StatusPrijave.UTOKU && prijava.Status != StatusPrijave.USPJESNA)
             {
-                TempData["ErrorMessage"] = "Only applications in progress can be edited.";
+                TempData["ErrorMessage"] = "Samo prijave koje su u toku ili uspješne mogu biti uređene.";
                 return RedirectToAction(nameof(Details), new { id = model.PrijavaID });
             }
+
+            // Store original status to determine if we need to change it
+            var originalStatus = prijava.Status;
 
             // Get IDs
             var dokumentacijaId = prijava.DokumentacijaID;
@@ -732,8 +831,8 @@ namespace SistemErasmusRazmjena.Controllers
 
                 // 1. Update documentation using SQL
                 string docSql = @"UPDATE Dokumentacije 
-                          SET CV = @cv, MotivacionoPismo = @mp, UgovorOUcenju = @uo 
-                          WHERE ID = @id";
+                  SET CV = @cv, MotivacionoPismo = @mp, UgovorOUcenju = @uo 
+                  WHERE ID = @id";
 
                 await _context.Database.ExecuteSqlRawAsync(docSql,
                     new Microsoft.Data.SqlClient.SqlParameter("@cv", model.DokumentacijaOptions.CV),
@@ -741,7 +840,7 @@ namespace SistemErasmusRazmjena.Controllers
                     new Microsoft.Data.SqlClient.SqlParameter("@uo", model.DokumentacijaOptions.UgovorOUcenju),
                     new Microsoft.Data.SqlClient.SqlParameter("@id", dokumentacijaId));
 
-                _logger.LogInformation("Documentation updated");
+                _logger.LogInformation("Dokumentacija sačuvana");
 
                 // 2. Get existing subjects
                 var existingSubjectIds = await _context.Predmeti
@@ -793,20 +892,20 @@ namespace SistemErasmusRazmjena.Controllers
                     try
                     {
                         // Create parameter objects explicitly with correct types
-                        var ppidParam = new Microsoft.Data.SqlClient.SqlParameter("@ppid", System.Data.SqlDbType.Int) 
-                            { Value = prijedlogPredmetaId };
-                        var homeParam = new Microsoft.Data.SqlClient.SqlParameter("@home", System.Data.SqlDbType.NVarChar, 100) 
-                            { Value = subject.PredmetHome ?? "" };
-                        var acceptingParam = new Microsoft.Data.SqlClient.SqlParameter("@accepting", System.Data.SqlDbType.NVarChar, 100) 
-                            { Value = subject.PredmetAccepting ?? "" };
-                        var statusParam = new Microsoft.Data.SqlClient.SqlParameter("@status", System.Data.SqlDbType.Int) 
-                            { Value = 0 }; // 0 represents NACEKANJU in your enum
-                        
+                        var ppidParam = new Microsoft.Data.SqlClient.SqlParameter("@ppid", System.Data.SqlDbType.Int)
+                        { Value = prijedlogPredmetaId };
+                        var homeParam = new Microsoft.Data.SqlClient.SqlParameter("@home", System.Data.SqlDbType.NVarChar, 100)
+                        { Value = subject.PredmetHome ?? "" };
+                        var acceptingParam = new Microsoft.Data.SqlClient.SqlParameter("@accepting", System.Data.SqlDbType.NVarChar, 100)
+                        { Value = subject.PredmetAccepting ?? "" };
+                        var statusParam = new Microsoft.Data.SqlClient.SqlParameter("@status", System.Data.SqlDbType.Int)
+                        { Value = 0 }; // 0 represents NACEKANJU in your enum
+
                         // Execute with properly typed parameters
                         await _context.Database.ExecuteSqlRawAsync(
                             "INSERT INTO Predmeti (PrijedlogPredmetaID, PredmetHome, PredmetAccepting, Status) VALUES (@ppid, @home, @accepting, @status)",
                             ppidParam, homeParam, acceptingParam, statusParam);
-                        
+
                         _logger.LogInformation($"Added new subject: {subject.PredmetHome} -> {subject.PredmetAccepting}");
                     }
                     catch (Exception ex)
@@ -822,12 +921,31 @@ namespace SistemErasmusRazmjena.Controllers
                     new Microsoft.Data.SqlClient.SqlParameter("@time", DateTime.Now),
                     new Microsoft.Data.SqlClient.SqlParameter("@id", prijedlogPredmetaId));
 
-                TempData["SuccessMessage"] = "Your application has been successfully updated.";
+                // 8. If the original status was USPJESNA, change it back to UTOKU after editing
+                if (originalStatus == StatusPrijave.USPJESNA)
+                {
+                    var statusParam = new Microsoft.Data.SqlClient.SqlParameter("@status", System.Data.SqlDbType.Int)
+                    { Value = (int)StatusPrijave.UTOKU };
+                    var idParam = new Microsoft.Data.SqlClient.SqlParameter("@id", System.Data.SqlDbType.Int)
+                    { Value = model.PrijavaID };
+
+                    await _context.Database.ExecuteSqlRawAsync(
+                        "UPDATE Prijave SET Status = @status WHERE ID = @id",
+                        statusParam, idParam);
+
+                    _logger.LogInformation($"Changed application {model.PrijavaID} status from USPJESNA to UTOKU after editing");
+                    TempData["SuccessMessage"] = "Vaša prijava je uspješno sačuvana. Status prijave je promijenjen na 'U toku' za dalje razmatranje.";
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Vaša prijava je uspješno sačuvan.";
+                }
+
                 return RedirectToAction(nameof(Details), new { id = model.PrijavaID });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error saving application changes: {Message}", ex.Message);
+                _logger.LogError(ex, "Greška prilikom spremanja promjena: {Message}", ex.Message);
                 ModelState.AddModelError("", $"An error occurred while saving your changes: {ex.Message}");
 
                 // Reload view model data for the form
@@ -845,7 +963,6 @@ namespace SistemErasmusRazmjena.Controllers
 
                 return View(viewModel);
             }
-
         }
 
         [HttpGet]
@@ -869,7 +986,7 @@ namespace SistemErasmusRazmjena.Controllers
             // Only allow reapplying to rejected applications
             if (prijava.Status != StatusPrijave.NEUSPJESNA)
             {
-                TempData["ErrorMessage"] = "You can only reapply to rejected applications.";
+                TempData["ErrorMessage"] = "Moguće se opet prijaviti na program samo ako je prijava odbijena.";
                 return RedirectToAction(nameof(Details), new { id = prijava.ID });
             }
 
@@ -914,7 +1031,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (model.PrijedlogPredmeta.Count == 0)
             {
-                ModelState.AddModelError("", "At least one subject must be provided");
+                ModelState.AddModelError("", "Barem jedan predmet mora biti ponuđen");
                 return View(model);
             }
 
@@ -933,7 +1050,7 @@ namespace SistemErasmusRazmjena.Controllers
             // Only allow reapplying to rejected applications
             if (prijava.Status != StatusPrijave.NEUSPJESNA)
             {
-                TempData["ErrorMessage"] = "You can only reapply to rejected applications.";
+                TempData["ErrorMessage"] = "Moguće se opet prijaviti na program samo ako je prijava odbijena.";
                 return RedirectToAction(nameof(Details), new { id = prijava.ID });
             }
 
@@ -983,13 +1100,13 @@ namespace SistemErasmusRazmjena.Controllers
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     
-                    TempData["SuccessMessage"] = "Your application has been successfully resubmitted and is now in progress.";
+                    TempData["SuccessMessage"] = "Vaša prijava je uspješno poslana.";
                     return RedirectToAction(nameof(MyApplications));
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating reapplication: {Message}", ex.Message);
+                _logger.LogError(ex, "Greška prilikom slanja: {Message}", ex.Message);
                 ModelState.AddModelError("", $"An error occurred while updating your application: {ex.Message}");
                 return View(model);
             }

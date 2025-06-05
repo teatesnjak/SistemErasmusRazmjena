@@ -1,16 +1,16 @@
 ﻿@model List<SistemErasmusRazmjena.Models.ViewModels.ProgramViewModel>
 @{
-    ViewData["Title"] = "Available Erasmus Programs";
+    ViewData["Title"] = "Dostupni Erasmus programi";
 }
 
 <div class="container mt-4">
-    <h2>Available Erasmus Programs</h2>
+    <h2>Dostupni Erasmus programi</h2>
 
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zatvori"></button>
         </div>
     }
 
@@ -18,7 +18,7 @@
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zatvori"></button>
         </div>
     }
 
@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <h5 class="card-title">@item.Program.Univerzitet</h5>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            @item.Program.AkademskaGodina, @(item.Program.Semestar == 1 ? "Winter" : "Summer") Semester
+                            @item.Program.AkademskaGodina, @(item.Program.Semestar == 1 ? "Zimski" : "Ljetni") semestar
                         </h6>
                         <p class="card-text">
                             @if (item.Program.Opis?.Length > 150)
@@ -47,14 +47,14 @@
                         @if (item.HasApplied)
                         {
                             <div class="alert alert-success mb-3">
-                                <i class="bi bi-check-circle-fill me-2"></i> You have already applied to this program
+                                <i class="bi bi-check-circle-fill me-2"></i> Već ste se prijavili na ovaj program
                             </div>
                             <div class="d-flex justify-content-between">
                                 <a asp-action="Details" asp-route-id="@item.Program.ID" class="btn btn-outline-secondary">
-                                    Program Details
+                                    Detalji programa
                                 </a>
                                 <a asp-action="ApplicationDetails" asp-route-programId="@item.Program.ID" class="btn btn-success">
-                                    View Application
+                                    Prikaz prijave
                                 </a>
                             </div>
                         }
@@ -62,12 +62,12 @@
                         {
                             <div class="d-flex justify-content-between align-items-center">
                                 <a asp-action="Details" asp-route-id="@item.Program.ID" class="btn btn-outline-secondary">
-                                    Details
+                                    Detalji
                                 </a>
                                 <form asp-action="Apply" method="post">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="programId" value="@item.Program.ID" />
-                                    <button type="submit" class="btn btn-primary">Apply</button>
+                                    <button type="submit" class="btn btn-primary">Prijavi se</button>
                                 </form>
                             </div>
                         }
@@ -77,4 +77,3 @@
         }
     </div>
 </div>
-

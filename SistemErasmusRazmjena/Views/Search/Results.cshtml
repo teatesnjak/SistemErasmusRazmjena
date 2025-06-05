@@ -5,7 +5,7 @@
 }
 
 <div class="container mt-4">
-    <h2>Search Results for "@Model.Query"</h2>
+    <h2>Rezultati pretrage za "@Model.Query"</h2>
 
     <form asp-action="Results" method="get" class="mb-4">
         <div class="input-group">
@@ -13,11 +13,11 @@
                    placeholder="Refine your search..."
                    value="@Model.Query" required />
             <button type="submit" class="btn btn-primary">
-                <i class="bi bi-search"></i> Search
+                <i class="bi bi-search"></i> Pretraga
             </button>
         </div>
         <small class="form-text text-muted">
-            Try searching for "Winter", "Summer", "UTOKU" (in progress), "USPJESNA" (approved), "NEUSPJESNA" (rejected)
+            Pokušajte ključne riječi poput "Ljetni", "Zimski", "U toku", "Uspjesna", "Neuspjesna" 
         </small>
     </form>
 
@@ -29,7 +29,7 @@
                         Model.Applications.NEUSPJESNA.Count == 0)
             {
                 <div class="alert alert-info">
-                    <p class="mb-0">No results found for "<strong>@Model.Query</strong>". Try using different keywords.</p>
+                    <p class="mb-0">Nema pronađenih rezultata za "<strong>@Model.Query</strong>". Pokušajte s drugim ključnim riječima.</p>
                 </div>
             }
             else
@@ -39,17 +39,17 @@
                 {
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h3>Erasmus Programs (@Model.Programs.Count)</h3>
+                            <h3>Erasmus Programi (@Model.Programs.Count)</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>University</th>
-                                            <th>Academic Year</th>
-                                            <th>Semester</th>
-                                            <th>Actions</th>
+                                            <th>Univerzitet</th>
+                                            <th>Akademska godina</th>
+                                            <th>Semestar</th>
+                                            <th>Radnje</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -77,7 +77,7 @@
                 {
                     <div class="card mb-4">
                         <div class="card-header bg-warning text-dark">
-                            <h3>In Progress Applications (@Model.Applications.UTOKU.Count)</h3>
+                            <h3>Prijave u toku (@Model.Applications.UTOKU.Count)</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -85,10 +85,10 @@
                                     <thead>
                                         <tr>
                                             <th>Student</th>
-                                            <th>University</th>
-                                            <th>Academic Year</th>
-                                            <th>Semester</th>
-                                            <th>Actions</th>
+                                            <th>Univerzitet</th>
+                                            <th>Akademska godina</th>
+                                            <th>Semestar</th>
+                                            <th>Radnje</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -101,7 +101,7 @@
                                                 <td>@(application.ErasmusProgram.Semestar == 1 ? "Winter" : "Summer")</td>
                                                 <td>
                                                     <a asp-controller="Prijava" asp-action="Details" asp-route-id="@application.ID"
-                                                       class="btn btn-sm btn-info">View Details</a>
+                                                       class="btn btn-sm btn-info">Detalji</a>
                                                 </td>
                                             </tr>
                                         }
@@ -116,7 +116,7 @@
                 {
                     <div class="card mb-4">
                         <div class="card-header bg-success text-white">
-                            <h3>Approved Applications (@Model.Applications.USPJESNA.Count)</h3>
+                            <h3>Uspješne prijave (@Model.Applications.USPJESNA.Count)</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -124,12 +124,12 @@
                                     <thead>
                                         <tr>
                                             <th>Student</th>
-                                            <th>University</th>
-                                            <th>Academic Year</th>
-                                            <th>Semester</th>
+                                            <th>Univerzitet</th>
+                                            <th>Akademska godina</th>
+                                            <th>Semestar</th>
                                             @if (!User.IsInRole("ECTSKoordinator"))
                                             {
-                                                <th>Actions</th>
+                                                <th>Radnje</th>
                                             }
                                         </tr>
                                     </thead>
@@ -161,7 +161,7 @@
                 {
                     <div class="card mb-4">
                         <div class="card-header bg-danger text-white">
-                            <h3>Rejected Applications (@Model.Applications.NEUSPJESNA.Count)</h3>
+                            <h3>Neuspješne prijave (@Model.Applications.NEUSPJESNA.Count)</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -169,12 +169,12 @@
                                     <thead>
                                         <tr>
                                             <th>Student</th>
-                                            <th>University</th>
-                                            <th>Academic Year</th>
-                                            <th>Semester</th>
+                                            <th>Univerzitet</th>
+                                            <th>Akademska godina</th>
+                                            <th>Semestar</th>
                                             @if (!User.IsInRole("ECTSKoordinator"))
                                             {
-                                                <th>Actions</th>
+                                                <th>Radnje</th>
                                             }
                                         </tr>
                                     </thead>
@@ -190,7 +190,7 @@
                                                 {
                                                     <td>
                                                         <a asp-controller="Prijava" asp-action="Details" asp-route-id="@application.ID"
-                                                           class="btn btn-sm btn-info">View Details</a>
+                                                           class="btn btn-sm btn-info">Detalji</a>
                                                     </td>
                                                 }
                                             </tr>

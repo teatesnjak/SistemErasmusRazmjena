@@ -17,20 +17,20 @@
     <input type="hidden" asp-for="Univerzitet" />
     <input type="hidden" asp-for="DateAdded" />
 
-    <h2>Create Application for Erasmus Program</h2>
+    <h2>Prijavi se na Erasmus program</h2>
 
     <div>
-        <h3>Program Details</h3>
-        <p><strong>University:</strong> @Model.Univerzitet</p>
-        <p><strong>Academic Year:</strong> @Model.AkademskaGodina</p>
-        <p><strong>Semester:</strong> @Model.Semestar</p>
-        <p><strong>Description:</strong> @Model.Opis</p>
-        <p><strong>Date Added:</strong> @Model.DateAdded.ToString("MM/dd/yyyy")</p>
+        <h3>Detalji programa</h3>
+        <p><strong>Univerzitet:</strong> @Model.Univerzitet</p>
+        <p><strong>Akademska godina:</strong> @Model.AkademskaGodina</p>
+        <p><strong>Semestar:</strong> @Model.Semestar</p>
+        <p><strong>Opis:</strong> @Model.Opis</p>
+        <p><strong>Datum dodavnja programa:</strong> @Model.DateAdded.ToString("MM/dd/yyyy")</p>
     </div>
 
     <div class="card mb-4">
         <div class="card-header">
-            <h3>Documentation</h3>
+            <h3>Dokumentacija</h3>
         </div>
         <div class="card-body">
             <div class="form-check mb-2">
@@ -39,27 +39,27 @@
             </div>
             <div class="form-check mb-2">
                 <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.MotivacionoPismo" id="motivationalCheck" />
-                <label class="form-check-label" for="motivationalCheck">Motivational Letter</label>
+                <label class="form-check-label" for="motivationalCheck">Motivaciono pismo</label>
             </div>
             <div class="form-check mb-2">
                 <input class="form-check-input" type="checkbox" asp-for="DokumentacijaOptions.UgovorOUcenju" id="learningCheck" />
-                <label class="form-check-label" for="learningCheck">Learning Agreement</label>
+                <label class="form-check-label" for="learningCheck">Ugovor o učenjut</label>
             </div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="mb-0">Subjects</h3>
-            <button type="button" id="addSubjectRow" class="btn btn-sm btn-primary">Add Subject</button>
+            <h3 class="mb-0">Predmeti</h3>
+            <button type="button" id="addSubjectRow" class="btn btn-sm btn-primary">Dodaj predmet</button>
         </div>
         <div class="card-body">
             <table id="subjectsTable" class="table">
                 <thead>
                     <tr>
-                        <th>Home University Subject</th>
-                        <th>Accepting University Subject</th>
-                        <th>Actions</th>
+                        <th>Predmeti matičnog univerziteta</th>
+                        <th>Predmeti stranog univerziteta</th>
+                        <th>Radnje</th>
                     </tr>
                 </thead>
                 <tbody id="subjectRows">
@@ -71,7 +71,7 @@
                             <input type="text" name="PrijedlogPredmeta[0].PredmetAccepting" class="form-control" required />
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+                            <button type="button" class="btn btn-danger btn-sm remove-row">Ukloni predmet</button>
                             <input type="hidden" name="PrijedlogPredmeta[0].Status" value="0" />
                             <input type="hidden" name="PrijedlogPredmeta[0].PredmetID" value="0" />
                         </td>
@@ -83,8 +83,8 @@
 
     <div class="card-body mt-4">
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Submit Application</button>
-            <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Pošalji prijavu</button>
+            <a asp-controller="ErasmusProgram" asp-action="Index" class="btn btn-secondary">Otkaži</a>
         </div>
     </div>
 </form>

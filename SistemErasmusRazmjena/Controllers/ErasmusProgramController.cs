@@ -85,7 +85,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (application == null)
             {
-                TempData["ErrorMessage"] = "Application not found.";
+                TempData["ErrorMessage"] = "Prijava nije pronađena.";
                 return RedirectToAction(nameof(AvailablePrograms));
             }
 
@@ -114,7 +114,7 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (existingApplication)
             {
-                TempData["ErrorMessage"] = "You have already applied to this program.";
+                TempData["ErrorMessage"] = "Već ste prijavljeni na ovaj program.";
                 return RedirectToAction(nameof(AvailablePrograms));
             }
 
@@ -137,7 +137,7 @@ namespace SistemErasmusRazmjena.Controllers
 
                 if (existingApplication)
                 {
-                    TempData["ErrorMessage"] = "You have already applied to this program.";
+                    TempData["ErrorMessage"] = "Već ste prijavljeni na ovaj program.";
                     return RedirectToAction(nameof(AvailablePrograms));
                 }
 
@@ -182,20 +182,20 @@ namespace SistemErasmusRazmjena.Controllers
 
                 await transaction.CommitAsync();
 
-                TempData["SuccessMessage"] = "Your application has been submitted successfully.";
+                TempData["SuccessMessage"] = "Uspješno sačuvana prijava.";
                 return RedirectToAction(nameof(AvailablePrograms));
             }
             catch (DbUpdateException ex) when (IsDuplicateKeyException(ex))
             {
                 // This specifically catches unique constraint violations
                 await transaction.RollbackAsync();
-                TempData["ErrorMessage"] = "You have already applied to this program.";
+                TempData["ErrorMessage"] = "Već ste prijavljeni na ovaj program.";
                 return RedirectToAction(nameof(AvailablePrograms));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                TempData["ErrorMessage"] = "An error occurred while submitting your application: " + ex.Message;
+                TempData["ErrorMessage"] = "Greška prilikom slanja prijave: " + ex.Message;
                 return RedirectToAction(nameof(AvailablePrograms));
             }
         }
@@ -242,6 +242,22 @@ namespace SistemErasmusRazmjena.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ID,Univerzitet,AkademskaGodina,Semestar,Opis")] ErasmusProgram erasmusProgram)
         {
+            // Validate the AkademskaGodina format
+            if (!string.IsNullOrWhiteSpace(erasmusProgram.AkademskaGodina))
+            {
+                var parts = erasmusProgram.AkademskaGodina.Split('/');
+                if (parts.Length != 2 ||
+                    !int.TryParse(parts[0], out int firstYear) ||
+                    !int.TryParse(parts[1], out int secondYear) ||
+                    secondYear - firstYear != 1)
+                {
+                    ModelState.AddModelError("AkademskaGodina", "Academska godina mora biti u formatu YYYY/YYYY, pri čemu druga godina mora biti tačno jedna godina nakon prve.");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("AkademskaGodina", "Obavezna je akademska godina.");
+            }
             if (ModelState.IsValid)
             {
                 // Set creation date to current date/time
@@ -281,14 +297,14 @@ namespace SistemErasmusRazmjena.Controllers
 
             if (id != model.ID)
             {
-                Console.WriteLine("ID mismatch between route and model.");
-                ModelState.AddModelError("", "ID mismatch. Please try again.");
+                Console.WriteLine("Neusklađenost ID-a između rute i modela.");
+                ModelState.AddModelError("", "Neusklađenost ID-a. Molim Vas pokušajte opet.");
                 return View(model);
             }
 
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("Model validation failed.");
+                Console.WriteLine("Validacija modela nije uspjela.");
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     Console.WriteLine($"Validation Error: {error.ErrorMessage}");
@@ -301,7 +317,7 @@ namespace SistemErasmusRazmjena.Controllers
                 var existingProgram = await _context.ErasmusProgrami.AsNoTracking().FirstOrDefaultAsync(e => e.ID == id);
                 if (existingProgram == null)
                 {
-                    Console.WriteLine("Program not found in the database.");
+                    Console.WriteLine("Program nije uspješno pronađen u bazi.");
                     return NotFound();
                 }
 
@@ -309,7 +325,7 @@ namespace SistemErasmusRazmjena.Controllers
 
                 _context.Update(model);
                 await _context.SaveChangesAsync();
-                Console.WriteLine("Program updated successfully.");
+                Console.WriteLine("Program uspješno sačuvan.");
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -324,7 +340,7 @@ namespace SistemErasmusRazmjena.Controllers
                 }
             }
 
-            TempData["SuccessMessage"] = "Erasmus program updated successfully.";
+            TempData["SuccessMessage"] = "Erasmus program je uspješno ažuriran.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -362,6 +378,8 @@ namespace SistemErasmusRazmjena.Controllers
 
             _context.ErasmusProgrami.Remove(program);
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Erasmus program je uspješno obrisan.";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -413,7 +431,7 @@ namespace SistemErasmusRazmjena.Controllers
             }
             else
             {
-                TempData["SuccessMessage"] = "No duplicate applications found.";
+                TempData["SuccessMessage"] = "Nisu pronađeni duplikati.";
             }
 
             return RedirectToAction(nameof(Index));

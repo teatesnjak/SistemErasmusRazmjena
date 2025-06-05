@@ -52,8 +52,8 @@ namespace SistemErasmusRazmjena.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while fetching Fakulteti or creating the RegisterViewModel.");
-                ModelState.AddModelError(string.Empty, "An error occurred while loading the registration page. Please try again later.");
+                _logger.LogError(ex, "Greška se desila prilikom nabavljanja fakulteta ili pravljenja RegisterViewModel.");
+                ModelState.AddModelError(string.Empty, "Greška se desila prilikom registracije. Pokušajte opet.");
                 return View(new RegisterViewModel { Fakulteti = new List<Fakultet>() }); // Ensure a return statement is present to fix CS0161
             }
         }
@@ -106,7 +106,9 @@ namespace SistemErasmusRazmjena.Controllers
                 UserName = model.Email,
                 Email = model.Email,
                 Uloga = model.Role,
-                FakultetID = model.Role == "Admin" ? null : model.FakultetID
+                FakultetID = model.Role == "Admin" ? null : model.FakultetID,
+                FirstName = model.FirstName, // Ensure FirstName is set
+                LastName = model.LastName    // Ensure LastName is set
             };
 
             _logger.LogInformation("Attempting to create user. Email: {Email}, Role: {Role}, FakultetID: {FakultetID}",
@@ -161,7 +163,9 @@ namespace SistemErasmusRazmjena.Controllers
             {
                 if (model.FakultetID == null)
                 {
-                    ModelState.AddModelError("FakultetID", "Fakultet is required for ECTS Koordinator role.");
+                    ModelState.AddModelError("FakultetID", "Fakultet je neophodan za ECTS koordinatora.");
+                    // Repopulate Fakulteti list before returning the view
+                    model.Fakulteti = _context.Fakulteti.ToList();
                     return View(model);
                 }
 
@@ -180,7 +184,7 @@ namespace SistemErasmusRazmjena.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "ECTSKoordinator");
-                    _logger.LogInformation("ECTS Koordinator created by Admin.");
+                    _logger.LogInformation("ECTS Koordinator stvoren od Admina.");
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -190,8 +194,12 @@ namespace SistemErasmusRazmjena.Controllers
                 }
             }
 
+            // Repopulate Fakulteti list before returning the view
+            model.Fakulteti = _context.Fakulteti.ToList();
             return View(model);
         }
+
+
 
 
         [HttpGet]
@@ -216,11 +224,11 @@ namespace SistemErasmusRazmjena.Controllers
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("Korisnik ulogovan.");
                     return RedirectToLocal(returnUrl);
                 }
 
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty, "Nevažeći pokušaj prijave.");
             }
 
             return View(model);
@@ -231,7 +239,7 @@ namespace SistemErasmusRazmjena.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
+            _logger.LogInformation("Korisnik izlogovan.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
