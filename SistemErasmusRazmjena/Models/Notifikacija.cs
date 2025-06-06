@@ -16,5 +16,7 @@ namespace SistemErasmusRazmjena.Models
         public DateTime Vrijeme { get; set; }
         public bool Procitano { get; set; }
         public DateTime Datum { get; set; }
+        public int PrijavaId { get; set; }
+
     }
 }

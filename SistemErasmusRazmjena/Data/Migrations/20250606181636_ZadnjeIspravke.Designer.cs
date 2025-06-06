@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemErasmusRazmjena.Data;
 
@@ -11,9 +12,11 @@ using SistemErasmusRazmjena.Data;
 namespace SistemErasmusRazmjena.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250606181636_ZadnjeIspravke")]
+    partial class ZadnjeIspravke
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -566,8 +569,7 @@ namespace SistemErasmusRazmjena.Data.Migrations
                 {
                     b.HasOne("SistemErasmusRazmjena.Models.ErasmusProgram", "ErasmusProgram")
                         .WithMany()
-                        .HasForeignKey("ErasmusProgramID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ErasmusProgramID");
 
                     b.Navigation("ErasmusProgram");
                 });

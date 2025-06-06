@@ -31,9 +31,9 @@ namespace SistemErasmusRazmjena.Data
             // Prijava - ErasmusProgram
             modelBuilder.Entity<Prijava>()
                 .HasOne(p => p.ErasmusProgram)
-                .WithMany()
+                .WithMany(e => e.Prijave)
                 .HasForeignKey(p => p.ErasmusProgramID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade); // Enable cascade delete
 
             // Prijava - Dokumentacija
             modelBuilder.Entity<Prijava>()
@@ -56,7 +56,12 @@ namespace SistemErasmusRazmjena.Data
                 .HasForeignKey(p => p.PrijedlogPredmetaID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-
+            // PrijedlogPredmeta - ErasmusProgram
+            modelBuilder.Entity<PrijedlogPredmeta>()
+                .HasOne(p => p.ErasmusProgram)
+                .WithMany()
+                .HasForeignKey(p => p.ErasmusProgramID)
+                .OnDelete(DeleteBehavior.Cascade); // Enable cascade delete
 
             modelBuilder.Entity<Notifikacija>()
                 .HasOne(n => n.Korisnik)

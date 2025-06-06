@@ -12,14 +12,16 @@ namespace SistemErasmusRazmjena.Models
 
         [Required]
         [RegularExpression(@"^\d{4}/\d{4}$", ErrorMessage = "Academic year must be in the format YYYY/YYYY.")]
-        public string AkademskaGodina { get; set; }
+        public string AkademskaGodina { get; set; } = string.Empty;
 
         [Required]
-        public string Univerzitet { get; set; }
+        public string Univerzitet { get; set; } = string.Empty;
 
-        public string Opis { get; set; }
+        public string Opis { get; set; } = string.Empty;
 
         public DateTime DateAdded { get; set; } // Add this property
 
+        // Add this navigation property to fix the issue
+        public virtual ICollection<Prijava> Prijave { get; set; } = new List<Prijava>();
     }
 }

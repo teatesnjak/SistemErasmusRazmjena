@@ -1,47 +1,17 @@
-﻿@model SistemErasmusRazmjena.Models.Notifikacija
-
-@{
-    ViewData["Title"] = "Create";
+﻿@{
+    ViewData["Title"] = "Pošalji notifikaciju";
+    int prijavaId = (int)ViewBag.PrijavaID;
 }
 
-<h1>Create</h1>
+<h2>Pošalji notifikaciju</h2>
 
-<h4>Notifikacija</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="KorisnikID" class="control-label"></label>
-                <select asp-for="KorisnikID" class ="form-control" asp-items="ViewBag.KorisnikID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vrijeme" class="control-label"></label>
-                <input asp-for="Vrijeme" class="form-control" />
-                <span asp-validation-for="Vrijeme" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Sadrzaj" class="control-label"></label>
-                <input asp-for="Sadrzaj" class="form-control" />
-                <span asp-validation-for="Sadrzaj" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Procitano" /> @Html.DisplayNameFor(model => model.Procitano)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Create" method="post">
+    <input type="hidden" name="prijavaId" value="@prijavaId" />
+
+    <div class="mb-3">
+        <label for="sadrzaj" class="form-label">Sadržaj notifikacije</label>
+        <textarea name="sadrzaj" class="form-control" rows="4" required></textarea>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <button type="submit" class="btn btn-primary">Pošalji</button>
+</form>

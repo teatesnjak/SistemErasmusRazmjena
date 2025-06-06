@@ -1,0 +1,27 @@
+﻿@model IEnumerable<SistemErasmusRazmjena.Models.Notifikacija>
+
+<h1>Moje Notifikacije</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sadržaj</th>
+            <th>Datum</th>
+            <th>Radnje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var notifikacija in Model)
+        {
+            <tr>
+                <td>@notifikacija.Sadrzaj</td>
+                <td>@notifikacija.Datum.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    <a asp-controller="Prijava" asp-action="Details" asp-route-id="@notifikacija.PrijavaId" class="btn btn-primary">
+                        Detalji
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

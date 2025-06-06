@@ -40,7 +40,7 @@
         }
       }
     },
-    "/api/Notifikacija/moje": {
+    "/api/Notifikacija/api/notifikacije/moje": {
       "get": {
         "tags": [
           "Notifikacija"
@@ -78,6 +78,49 @@
         }
       }
     },
+    "/api/Notifikacija/notifikacije/moje-view": {
+      "get": {
+        "tags": [
+          "Notifikacija"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notifikacija/create": {
+      "post": {
+        "tags": [
+          "Notifikacija"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifikacijaRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifikacijaRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifikacijaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Notifikacija/oznaciProcitano/{id}": {
       "put": {
         "tags": [
@@ -93,6 +136,18 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notifikacija/moje-view": {
+      "get": {
+        "tags": [
+          "Notifikacija"
         ],
         "responses": {
           "200": {
@@ -374,6 +429,24 @@
           "datum": {
             "type": "string",
             "format": "date-time"
+          },
+          "prijavaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotifikacijaRequest": {
+        "type": "object",
+        "properties": {
+          "prijavaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sadrzaj": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

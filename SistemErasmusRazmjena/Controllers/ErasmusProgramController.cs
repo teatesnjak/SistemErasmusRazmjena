@@ -370,15 +370,19 @@ namespace SistemErasmusRazmjena.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var program = await _context.ErasmusProgrami.FindAsync(id);
-            if (program == null)
-            {
-                return NotFound();
-            }
+            var erasmusProgram = await _context.ErasmusProgrami
+                .FirstOrDefaultAsync(ep => ep.ID == id);
 
-            _context.ErasmusProgrami.Remove(program);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Erasmus program je uspješno obrisan.";
+            if (erasmusProgram != null)
+            {
+                // Remove related PrijedlogPredmeta entities
+                var relatedPrijedloziPredmeta = await _context.PrijedloziPredmeta
+                    .Where(pp => pp.ErasmusProgramID == erasmusProgram.ID)
+                    .ToListAsync();
+                _context.PrijedloziPredmeta.RemoveRange(relatedPrijedloziPredmeta);
+                _context.ErasmusProgrami.Remove(erasmusProgram);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction(nameof(Index));
         }

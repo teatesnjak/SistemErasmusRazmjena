@@ -52,16 +52,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="ErasmusProgram" asp-action="Index">Erasmus programi</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Search" asp-action="Index">
-                                <i class="bi bi-search"></i> Pretraga
-                            </a>
-                        </li>
-                        @if (User.IsInRole("Student"))
+
+                                                @if (User.IsInRole("Student"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="/Prijava/MyApplications">Moje prijave</a>
+                                <a class="nav-link text-dark" href="/Prijava/MyApplications">Prijave</a>
                             </li>
+
+                             <li class="nav-item">
+                                 <a class="nav-link text-dark" asp-controller="Notifikacija" asp-action="Moje">
+                                     Notifikacije
+                                 </a>
+                             </li>
+
                         }
                         @if (User.IsInRole("Admin") || User.IsInRole("ECTSKoordinator"))
                         {
@@ -75,15 +78,21 @@
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="RegisterKoordinator">Dodaj koordinatora</a>
                             </li>
                         }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Search" asp-action="Index">
+                                <i class="bi bi-search"></i> Pretraga
+                            </a>
+                        </li>
+
 
                     </ul>
-                    <div class="d-flex">
+                    <div class="d-flex align-items-center">
                         @if (User?.Identity?.IsAuthenticated == true)
                         {
                             <span class="navbar-text me-3">
                                 Hello, @User.Identity.Name!
                             </span>
-                            <form asp-controller="Account" asp-action="Logout" method="post">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="mb-0">
                                 <button type="submit" class="btn btn-outline-danger">Odjava</button>
                             </form>
                         }
@@ -123,6 +132,18 @@
                     </p>
                 </div>
                 <div class="col-md-6 text-md-end">
+                    <h5>Lokacija</h5>
+                    <div class="map-container" style="height: 200px; width: 100%; border: 1px solid #ccc;">
+                        <iframe src="https://www.google.com/maps?q=Fakultetska+3,+Zenica&output=embed"
+                                width="100%"
+                                height="100%"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
                     <p>&copy; 2025 - Sistem Erasmus Razmjena</p>
                     <p>
                         <a href="/Home/Privacy" class="text-white">Politika privatnosti</a>
@@ -131,6 +152,7 @@
             </div>
         </div>
     </footer>
+
 
     <!-- jQuery must be loaded before Bootstrap JS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

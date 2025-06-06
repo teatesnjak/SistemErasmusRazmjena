@@ -1,14 +1,14 @@
-@{
+﻿@{
     ViewData["Title"] = "Inbox";
 }
 
 <h1>Inbox</h1>
 
 <div>
-    <h2>Unread Notifications</h2>
+    <h2>Nove notifikacije</h2>
     @if (ViewBag.UnreadNotifications.Count == 0)
     {
-        <p>No unread notifications.</p>
+        <p>Nema novih notifikacija.</p>
     }
     else
     {
@@ -19,17 +19,17 @@
                     <span class="text-danger">?</span>
                     @notification.Sadrzaj
                     <form method="post" asp-action="MarkAsRead" asp-route-id="@notification.Id" style="display:inline;">
-                        <button type="submit" class="btn btn-link">Mark as Read</button>
+                        <button type="submit" class="btn btn-link">Označi kao pročitano</button>
                     </form>
                 </li>
             }
         </ul>
     }
 
-    <h2>Read Notifications</h2>
+    <h2>Pročitane notifikacije</h2>
     @if (ViewBag.ReadNotifications.Count == 0)
     {
-        <p>No read notifications.</p>
+        <p>Nemna pročitanih notifikacija.</p>
     }
     else
     {

@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\erasmusprogram\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\erasmusprogram\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\prijava\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\prijava\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\data\\migrations\\20250606184035_prepravkaerasmusprogrammodela.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\data\\migrations\\20250606184035_prepravkaerasmusprogrammodela.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\models\\erasmusprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\models\\erasmusprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\erasmusprogram\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\erasmusprogram\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,29 +38,53 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Prijava\\Index.cshtml",
-              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\Prijava\\Index.cshtml",
-              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Prijava\\Index.cshtml",
-              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\Prijava\\Index.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACUAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAAF4AAABpAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-05T16:59:14.664Z",
+              "WhenOpened": "2025-06-06T18:46:40.431Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\ErasmusProgram\\Details.cshtml",
-              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\ErasmusProgram\\Details.cshtml",
-              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\ErasmusProgram\\Details.cshtml",
-              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\ErasmusProgram\\Details.cshtml",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAIwEsAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-05T16:58:38.053Z",
+              "DocumentIndex": 1,
+              "Title": "20250606184035_PrepravkaErasmusProgramModela.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T18:40:35.868Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ErasmusProgram.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwA4AAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T18:37:43.52Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
+              "ViewState": "AgIAABkAAAAAAAAAAAAiwCEAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-06T18:33:10.58Z"
             }
           ]
         }

@@ -135,6 +135,15 @@
         </a>
     }
 
+    @if (User.IsInRole("Admin"))
+    {
+        <button id="posaljiNotifikaciju" class="btn btn-warning" data-prijava-id="@Model.PrijavaID">
+            Pošalji notifikaciju
+        </button>
+    }
+
+
+
     <div class="mt-4">
         @if (User.IsInRole("Student"))
         {
@@ -198,6 +207,38 @@
                     }
                 });
             });
+
+        document.getElementById("posaljiNotifikaciju").addEventListener("click", function () {
+            const prijavaId = parseInt(this.getAttribute("data-prijava-id"));
+            const sadrzaj = `Notification content for application ${prijavaId}`;
+
+            if (!sadrzaj || sadrzaj.trim() === "") {
+                alert("Sadržaj notifikacije ne može biti prazan.");
+                return;
+            }
+
+            fetch('/api/Notifikacija/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prijavaId, sadrzaj })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Notifikacija je uspješno poslana!");
+                } else {
+                    return response.json().then(err => {
+                        console.error("Validation Error:", err.errors);
+                        alert("Došlo je do greške prilikom slanja notifikacije. Provjerite podatke.");
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+                alert("Došlo je do greške prilikom slanja notifikacije.");
+            });
+        });
         });
     </script>
 }

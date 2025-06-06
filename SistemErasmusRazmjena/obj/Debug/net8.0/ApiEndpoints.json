@@ -28,7 +28,7 @@
   {
     "ContainingType": "SistemErasmusRazmjena.Controllers.NotifikacijaController",
     "Method": "GetNotifikacije",
-    "RelativePath": "api/Notifikacija/moje",
+    "RelativePath": "api/Notifikacija/api/notifikacije/moje",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -44,6 +44,42 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "SistemErasmusRazmjena.Controllers.NotifikacijaController",
+    "Method": "Create",
+    "RelativePath": "api/Notifikacija/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SistemErasmusRazmjena.Controllers.NotifikacijaController\u002BNotifikacijaRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemErasmusRazmjena.Controllers.NotifikacijaController",
+    "Method": "MojeView",
+    "RelativePath": "api/Notifikacija/moje-view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SistemErasmusRazmjena.Controllers.NotifikacijaController",
+    "Method": "Moje",
+    "RelativePath": "api/Notifikacija/notifikacije/moje-view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "SistemErasmusRazmjena.Controllers.NotifikacijaController",
