@@ -73,9 +73,9 @@ namespace SistemErasmusRazmjena.Controllers
                         NormalizeText(p.Opis ?? "").Contains(normalizedQuery) ||
                         NormalizeText(p.Semestar.ToString()).Contains(normalizedQuery) ||
                         // Match "Winter" for semester 1
-                        (NormalizeText("winter").Contains(normalizedQuery) && p.Semestar == 1) ||
+                        (NormalizeText("zimski").Contains(normalizedQuery) && p.Semestar == 1) ||
                         // Match "Summer" for semester 2
-                        (NormalizeText("summer").Contains(normalizedQuery) && p.Semestar == 2))
+                        (NormalizeText("ljetni").Contains(normalizedQuery) && p.Semestar == 2))
                     .ToList();
             }
 
@@ -132,8 +132,8 @@ namespace SistemErasmusRazmjena.Controllers
                         NormalizeText(p.Student?.UserName ?? "").Contains(normalizedQuery) ||
                         NormalizeText((p.Student?.FirstName ?? "") + " " + (p.Student?.LastName ?? "")).Contains(normalizedQuery) ||
                         // Match by semester name
-                        (NormalizeText("winter").Contains(normalizedQuery) && p.ErasmusProgram?.Semestar == 1) ||
-                        (NormalizeText("summer").Contains(normalizedQuery) && p.ErasmusProgram?.Semestar == 2) ||
+                        (NormalizeText("zimski").Contains(normalizedQuery) && p.ErasmusProgram?.Semestar == 1) ||
+                        (NormalizeText("ljetni").Contains(normalizedQuery) && p.ErasmusProgram?.Semestar == 2) ||
                         // Match by status text variations
                         (NormalizeText("in progress").Contains(normalizedQuery) && p.Status == StatusPrijave.UTOKU) ||
                         (NormalizeText("approved").Contains(normalizedQuery) && p.Status == StatusPrijave.USPJESNA) ||

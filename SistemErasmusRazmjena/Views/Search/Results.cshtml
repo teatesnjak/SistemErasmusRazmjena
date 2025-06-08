@@ -58,10 +58,10 @@
                                             <tr>
                                                 <td>@program.Univerzitet</td>
                                                 <td>@program.AkademskaGodina</td>
-                                                <td>@(program.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>@(program.Semestar == 1 ? "Zimski" : "Ljetni")</td>
                                                 <td>
                                                     <a asp-controller="ErasmusProgram" asp-action="Details" asp-route-id="@program.ID"
-                                                       class="btn btn-sm btn-info">View Details</a>
+                                                       class="btn btn-sm btn-info">Detalji</a>
                                                 </td>
                                             </tr>
                                         }
@@ -98,7 +98,7 @@
                                                 <td>@application.Student.UserName</td>
                                                 <td>@application.ErasmusProgram.Univerzitet</td>
                                                 <td>@application.ErasmusProgram.AkademskaGodina</td>
-                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Zimski" : "Ljetni")</td>
                                                 <td>
                                                     <a asp-controller="Prijava" asp-action="Details" asp-route-id="@application.ID"
                                                        class="btn btn-sm btn-info">Detalji</a>
@@ -140,12 +140,12 @@
                                                 <td>@application.Student.UserName</td>
                                                 <td>@application.ErasmusProgram.Univerzitet</td>
                                                 <td>@application.ErasmusProgram.AkademskaGodina</td>
-                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Zimski" : "Ljetni")</td>
                                                 @if (!User.IsInRole("ECTSKoordinator"))
                                                 {
                                                     <td>
                                                         <a asp-controller="Prijava" asp-action="Details" asp-route-id="@application.ID"
-                                                           class="btn btn-sm btn-info">View Details</a>
+                                                           class="btn btn-sm btn-info">Detalji</a>
                                                     </td>
                                                 }
                                             </tr>
@@ -185,7 +185,7 @@
                                                 <td>@application.Student.UserName</td>
                                                 <td>@application.ErasmusProgram.Univerzitet</td>
                                                 <td>@application.ErasmusProgram.AkademskaGodina</td>
-                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Winter" : "Summer")</td>
+                                                <td>@(application.ErasmusProgram.Semestar == 1 ? "Zimski" : "Ljetni")</td>
                                                 @if (!User.IsInRole("ECTSKoordinator"))
                                                 {
                                                     <td>

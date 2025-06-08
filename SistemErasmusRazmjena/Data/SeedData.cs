@@ -11,7 +11,7 @@ namespace SistemErasmusRazmjena.Data
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            string[] roles = { "Admin", "Student", "ECTSKoordinator" };
+            string[] roles = { "Admin", "Student" };
 
             // Kreiraj uloge ako ne postoje
             foreach (var role in roles)
@@ -70,26 +70,7 @@ namespace SistemErasmusRazmjena.Data
                 }
             }
 
-            // ==================== ECTS KOORDINATOR ====================
-            var koordinatorEmail = "koordinator@erasmus.ba";
-            var koordinatorPassword = "Koordinator123!";
 
-            if (await userManager.FindByEmailAsync(koordinatorEmail) == null)
-            {
-                var koordinator = new ApplicationUser
-                {
-                    UserName = koordinatorEmail,
-                    Email = koordinatorEmail,
-                    EmailConfirmed = true,
-                    Uloga = "ECTSKoordinator"
-                };
-
-                var result = await userManager.CreateAsync(koordinator, koordinatorPassword);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(koordinator, "ECTSKoordinator");
-                }
-            }
         }
     }
 }

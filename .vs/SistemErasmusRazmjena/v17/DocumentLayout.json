@@ -3,20 +3,40 @@
   "WorkspaceRootPath": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\data\\migrations\\20250606184035_prepravkaerasmusprogrammodela.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\data\\migrations\\20250606184035_prepravkaerasmusprogrammodela.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\search\\results.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\search\\results.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\models\\erasmusprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\models\\erasmusprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\controllers\\searchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\controllers\\searchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\erasmusprogram\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\erasmusprogram\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\views\\search\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\views\\search\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\controllers\\prijavacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\controllers\\prijavacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\controllers\\notifikacijacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\controllers\\notifikacijacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|c:\\users\\teate\\desktop\\sistemerasmusrazmjena\\sistemerasmusrazmjena\\controllers\\erasmusprogramcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B58D7BC-E592-4CDF-8774-D622CD2D5270}|SistemErasmusRazmjena\\SistemErasmusRazmjena.csproj|solutionrelative:sistemerasmusrazmjena\\controllers\\erasmusprogramcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -39,52 +59,112 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAAAF4AAABpAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-06T18:46:40.431Z",
+              "Title": "SeedData.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Data\\SeedData.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Data\\SeedData.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Data\\SeedData.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Data\\SeedData.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAQwEwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-08T10:59:36.671Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "20250606184035_PrepravkaErasmusProgramModela.cs",
-              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
-              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
-              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
-              "RelativeToolTip": "SistemErasmusRazmjena\\Data\\Migrations\\20250606184035_PrepravkaErasmusProgramModela.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-06T18:40:35.868Z",
+              "Title": "Results.cshtml",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Search\\Results.cshtml",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\Search\\Results.cshtml",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Search\\Results.cshtml",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\Search\\Results.cshtml",
+              "ViewState": "AgIAAKEAAAAAAAAAAMBdwLsAAABzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-07T15:43:53.196Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ErasmusProgram.cs",
-              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
-              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
-              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
-              "RelativeToolTip": "SistemErasmusRazmjena\\Models\\ErasmusProgram.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAQwA4AAABDAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-06T18:37:43.52Z"
+              "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Search\\Index.cshtml",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\Search\\Index.cshtml",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\Search\\Index.cshtml",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\Search\\Index.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-07T15:41:40.489Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
-              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
-              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
-              "RelativeToolTip": "SistemErasmusRazmjena\\Views\\ErasmusProgram\\Create.cshtml",
-              "ViewState": "AgIAABkAAAAAAAAAAAAiwCEAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-06-06T18:33:10.58Z"
+              "DocumentIndex": 4,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T12:55:03.272Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SearchController.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\SearchController.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Controllers\\SearchController.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\SearchController.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Controllers\\SearchController.cs",
+              "ViewState": "AgIAAL4AAAAAAAAAAAAkwIcAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T12:55:09.984Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PrijavaController.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\PrijavaController.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Controllers\\PrijavaController.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\PrijavaController.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Controllers\\PrijavaController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T12:55:07.898Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "NotifikacijaController.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\NotifikacijaController.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Controllers\\NotifikacijaController.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\NotifikacijaController.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Controllers\\NotifikacijaController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T12:55:06.839Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T12:55:05.764Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ErasmusProgramController.cs",
+              "DocumentMoniker": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\ErasmusProgramController.cs",
+              "RelativeDocumentMoniker": "SistemErasmusRazmjena\\Controllers\\ErasmusProgramController.cs",
+              "ToolTip": "C:\\Users\\teate\\Desktop\\SistemErasmusRazmjena\\SistemErasmusRazmjena\\Controllers\\ErasmusProgramController.cs",
+              "RelativeToolTip": "SistemErasmusRazmjena\\Controllers\\ErasmusProgramController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T12:55:04.526Z"
             }
           ]
         }
